@@ -20,7 +20,7 @@ export interface Receipt {
   version: 1; id: string; task: string; taskDigest: string; inputsDigest: string;
   mode: 'agent' | 'runbook' | 'dry-run'; status: 'verified' | 'unverified' | 'failed' | 'dry-run';
   startedAt: string; durationMs: number; summary: string; result: JsonObject;
-  usage: { inputTokens: number; outputTokens: number; estimatedCostUsd: number; modelCalls: number; toolCalls: number };
+  usage: { inputTokens: number; outputTokens: number; estimatedCostUsd: number; accountingComplete: boolean; modelCalls: number; toolCalls: number };
   steps: Array<Step & { resultDigest: string }>;
   checks: Array<{ name: string; passed: boolean; detail: string }>;
   error?: string; digest?: string;

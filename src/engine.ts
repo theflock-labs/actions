@@ -6,7 +6,7 @@ import type { Provider, Receipt, Runbook, Message, ToolDefinition, JsonObject } 
 import { Workspace } from './workspace.js';
 import { ToolRegistry } from './tools.js';
 import { createProvider, rates } from './providers.js';
-import { digest, validator, redact, canonical } from './util.js';
+import { digest, validator, redact, canonical, checkedUrl } from './util.js';
 import { taskDigest, runbookSchema } from './runbook.js';
 import { verify } from './verify.js';
 
@@ -22,7 +22,7 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
   const receipt: Receipt = {
     version: 1, id: randomUUID(), task: task.name, taskDigest: taskDigest(task), inputsDigest: digest(task.inputs),
     mode: options.dryRun ? 'dry-run' : options.runbook ? 'runbook' : 'agent', status: 'failed', startedAt: new Date().toISOString(), durationMs: 0,
-    summary: '', result: {}, usage: { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0, modelCalls: 0, toolCalls: 0 }, steps: [], checks: [],
+    summary: '', result: {}, usage: { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0, accountingComplete: true, modelCalls: 0, toolCalls: 0 }, steps: [], checks: [],
   };
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(new Error('Run duration budget exceeded')), task.budget.maxDurationSeconds * 1000);
@@ -45,7 +45,18 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
   };
   try {
     const validateResult = validator(task.resultSchema);
-    for (const tool of Object.values(task.tools)) validator(tool.inputSchema);
+    for (const tool of Object.values(task.tools)) {
+      validator(tool.inputSchema);
+      if (tool.type === 'http') {
+        checkedUrl(tool.url, tool.allowInsecureLocalhost);
+        if (tool.method !== 'GET' && tool.effect === 'read') throw new Error(`HTTP ${tool.method} must declare effect=write`);
+      }
+    }
+    for (const server of task.mcp) {
+      if (server.transport === 'http') checkedUrl(server.url ?? '', server.allowInsecureLocalhost);
+      else if (!server.command) throw new Error('MCP stdio requires command');
+    }
+    if (task.model.baseUrl) checkedUrl(task.model.baseUrl, task.model.allowInsecureLocalhost);
     for (const check of task.verifiers) if (check.type === 'file' && check.jsonSchema) validator(check.jsonSchema);
     if (task.permissions.write && !task.verifiers.length) throw new Error('Write-enabled tasks require at least one independent verifier');
     if (options.dryRun) {
@@ -101,11 +112,13 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
           const reserveCost = (reserveInput * price.input + reserveOutput * price.output) / 1_000_000;
           if (reserveOutput < 1 || receipt.usage.inputTokens + reserveInput > task.budget.maxInputTokens || receipt.usage.estimatedCostUsd + reserveCost > task.budget.maxCostUsd) throw new Error('Insufficient token or estimated USD budget for another model call');
           receipt.usage.modelCalls++;
+          receipt.usage.accountingComplete = false;
           const turn = await provider.turn(messages, tools, reserveOutput, signal);
-          signal.throwIfAborted();
           if (![turn.usage.input, turn.usage.output].every(n => Number.isSafeInteger(n) && n >= 0)) throw new Error('Invalid provider token usage');
           receipt.usage.inputTokens += turn.usage.input; receipt.usage.outputTokens += turn.usage.output;
           receipt.usage.estimatedCostUsd = (receipt.usage.inputTokens * price.input + receipt.usage.outputTokens * price.output) / 1_000_000;
+          receipt.usage.accountingComplete = true;
+          signal.throwIfAborted();
           if (receipt.usage.inputTokens > task.budget.maxInputTokens || receipt.usage.outputTokens > task.budget.maxOutputTokens || receipt.usage.estimatedCostUsd > task.budget.maxCostUsd) throw new Error('Provider usage exceeded budget; no further tools will execute');
           if (!turn.calls.length) throw new Error('Agent returned no tool call or structured finish');
           if (turn.calls.some(c => c.name === 'finish') && turn.calls.length !== 1) throw new Error('finish must be the only call in its turn');

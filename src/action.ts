@@ -42,11 +42,12 @@ async function main(): Promise<void> {
     core.setOutput('status', receipt.status); core.setOutput('verified', receipt.status === 'verified');
     core.setOutput('result', JSON.stringify(receipt.result)); core.setOutput('receipt-path', path);
     core.setOutput('estimated-cost-usd', receipt.usage.estimatedCostUsd);
+    core.setOutput('accounting-complete', receipt.usage.accountingComplete);
     core.setOutput('model-calls', receipt.usage.modelCalls);
     if (process.env.GITHUB_STEP_SUMMARY) await core.summary.addHeading('Flock Actions', 2)
       .addTable([
         [{ data: 'Status', header: true }, { data: 'Model calls', header: true }, { data: 'Tool calls', header: true }, { data: 'Estimated inference (USD)', header: true }],
-        [receipt.status, String(receipt.usage.modelCalls), String(receipt.usage.toolCalls), receipt.usage.estimatedCostUsd.toFixed(6)],
+        [receipt.status, String(receipt.usage.modelCalls), String(receipt.usage.toolCalls), receipt.usage.accountingComplete ? receipt.usage.estimatedCostUsd.toFixed(6) : 'Incomplete: a request may have been billed without usage data'],
       ]).addRaw('\nReceipt includes contract fingerprints, independent checks, and redacted execution metadata.\n').write();
     if (receipt.status === 'failed') core.setFailed(receipt.error ?? 'Task failed');
     else core.info(`Flock Actions: ${receipt.status}; ${receipt.usage.modelCalls} model call(s).`);

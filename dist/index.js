@@ -33079,7 +33079,7 @@ async function runTask(task, options) {
     durationMs: 0,
     summary: "",
     result: {},
-    usage: { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0, modelCalls: 0, toolCalls: 0 },
+    usage: { inputTokens: 0, outputTokens: 0, estimatedCostUsd: 0, accountingComplete: true, modelCalls: 0, toolCalls: 0 },
     steps: [],
     checks: []
   };
@@ -33104,7 +33104,18 @@ async function runTask(task, options) {
   };
   try {
     const validateResult = validator(task.resultSchema);
-    for (const tool2 of Object.values(task.tools)) validator(tool2.inputSchema);
+    for (const tool2 of Object.values(task.tools)) {
+      validator(tool2.inputSchema);
+      if (tool2.type === "http") {
+        checkedUrl(tool2.url, tool2.allowInsecureLocalhost);
+        if (tool2.method !== "GET" && tool2.effect === "read") throw new Error(`HTTP ${tool2.method} must declare effect=write`);
+      }
+    }
+    for (const server of task.mcp) {
+      if (server.transport === "http") checkedUrl(server.url ?? "", server.allowInsecureLocalhost);
+      else if (!server.command) throw new Error("MCP stdio requires command");
+    }
+    if (task.model.baseUrl) checkedUrl(task.model.baseUrl, task.model.allowInsecureLocalhost);
     for (const check2 of task.verifiers) if (check2.type === "file" && check2.jsonSchema) validator(check2.jsonSchema);
     if (task.permissions.write && !task.verifiers.length) throw new Error("Write-enabled tasks require at least one independent verifier");
     if (options.dryRun) {
@@ -33168,12 +33179,14 @@ ${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
           const reserveCost = (reserveInput * price.input + reserveOutput * price.output) / 1e6;
           if (reserveOutput < 1 || receipt.usage.inputTokens + reserveInput > task.budget.maxInputTokens || receipt.usage.estimatedCostUsd + reserveCost > task.budget.maxCostUsd) throw new Error("Insufficient token or estimated USD budget for another model call");
           receipt.usage.modelCalls++;
+          receipt.usage.accountingComplete = false;
           const turn = await provider.turn(messages, tools, reserveOutput, signal);
-          signal.throwIfAborted();
           if (![turn.usage.input, turn.usage.output].every((n) => Number.isSafeInteger(n) && n >= 0)) throw new Error("Invalid provider token usage");
           receipt.usage.inputTokens += turn.usage.input;
           receipt.usage.outputTokens += turn.usage.output;
           receipt.usage.estimatedCostUsd = (receipt.usage.inputTokens * price.input + receipt.usage.outputTokens * price.output) / 1e6;
+          receipt.usage.accountingComplete = true;
+          signal.throwIfAborted();
           if (receipt.usage.inputTokens > task.budget.maxInputTokens || receipt.usage.outputTokens > task.budget.maxOutputTokens || receipt.usage.estimatedCostUsd > task.budget.maxCostUsd) throw new Error("Provider usage exceeded budget; no further tools will execute");
           if (!turn.calls.length) throw new Error("Agent returned no tool call or structured finish");
           if (turn.calls.some((c) => c.name === "finish") && turn.calls.length !== 1) throw new Error("finish must be the only call in its turn");

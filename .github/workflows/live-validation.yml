@@ -1,0 +1,40 @@
+name: Live provider acceptance
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: live-provider-acceptance
+  cancel-in-progress: false
+jobs:
+  openai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Require an explicitly configured provider secret
+        env:
+          MODEL_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node -e 'if (!process.env.MODEL_KEY) { console.error("Configure OPENAI_API_KEY in repository Actions secrets before dispatching live validation."); process.exit(1); }'
+      - name: Exercise real reasoning, tools, and independent verification
+        id: agent
+        uses: ./
+        with:
+          task-file: examples/docs-maintenance/task.json
+          api-key: ${{ secrets.OPENAI_API_KEY }}
+          max-cost-usd: '0.15'
+      - name: Assert actual agent execution and verified outcome
+        env:
+          STATUS: ${{ steps.agent.outputs.status }}
+          CALLS: ${{ steps.agent.outputs.model-calls }}
+        run: node -e 'if(process.env.STATUS!=="verified" || Number(process.env.CALLS)<2) process.exit(1)'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: live-openai-evidence
+          path: |
+            ${{ steps.agent.outputs.receipt-path }}
+            change-summary.md
+          retention-days: 7

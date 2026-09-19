@@ -69,7 +69,7 @@ A file verifier can require existence, `contains`, and/or a JSON Schema. A comma
 
 Inputs: `prompt`, `task-file`, `inputs`, `api-key`, `provider`, `model`, `max-cost-usd`, `mode`, `runbook`. Only `mode` has an Action-level default (`agent`); other overrides preserve task-file values. `mode` accepts `agent`, `runbook`, `dry-run`. Runbook mode requires `runbook`; other modes reject it. Without `task-file`, a prompt is required and no tools are granted.
 
-Outputs: `status`, `verified`, `result`, `receipt-path`, `estimated-cost-usd`, `model-calls`. Failed execution sets the Action failure status and still emits a receipt when the engine started. Configuration failures before the engine starts fail the step without a receipt. Receipt paths live in a private temporary directory and can be uploaded in a subsequent `if: always()` step.
+Outputs: `status`, `verified`, `result`, `receipt-path`, `estimated-cost-usd`, `accounting-complete`, `model-calls`. When `accounting-complete` is false, at least one submitted request has unknown billing; the cost estimate includes only known usage. Failed execution sets the Action failure status and still emits a receipt when the engine started. Configuration failures before the engine starts fail the step without a receipt. Receipt paths live in a private temporary directory and can be uploaded in a subsequent `if: always()` step.
 
 `verified` means the configured checks passed, not that the model's reasoning is globally correct. `unverified` is a successful report with no independent checks. `dry-run` validates the contract without tools, credentials or inference. It does not validate live service reachability or credentials.
 

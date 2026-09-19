@@ -4922,7 +4922,7 @@
       "format": "esm"
     },
     "src/engine.ts": {
-      "bytes": 10699,
+      "bytes": 11399,
       "imports": [
         {
           "path": "node:crypto",
@@ -5719,7 +5719,7 @@
           "bytesInOutput": 3506
         },
         "src/engine.ts": {
-          "bytesInOutput": 10067
+          "bytesInOutput": 10761
         },
         "src/workspace.ts": {
           "bytesInOutput": 2471
@@ -5818,7 +5818,7 @@
           "bytesInOutput": 337
         }
       },
-      "bytes": 1345269
+      "bytes": 1345963
     }
   }
 }

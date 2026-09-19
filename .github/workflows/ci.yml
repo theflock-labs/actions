@@ -41,7 +41,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: git diff --exit-code -- dist schema
+      - run: git diff --exit-code -- dist schema THIRD_PARTY_NOTICES.md
       - run: npm audit --omit=dev --audit-level=high
       - name: Run the packaged GitHub Action without an API key
         id: demo

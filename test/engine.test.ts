@@ -71,6 +71,14 @@ describe('outcome engine', () => {
     const r = await runTask(task({ budget: { maxCostUsd: 0 } }), { cwd, provider: p });
     expect(r.status).toBe('failed'); expect(p.turn).not.toHaveBeenCalled();
   });
+  it('marks billing evidence incomplete when an API request fails without usage', async () => {
+    const r = await runTask(task(), { cwd, provider: { turn: async () => { throw new Error('Connection reset after submission'); } } });
+    expect(r.status).toBe('failed'); expect(r.usage.modelCalls).toBe(1); expect(r.usage.accountingComplete).toBe(false);
+  });
+  it('checks URL policy even in a credential-free dry run', async () => {
+    const t = task({ tools: { unsafe: { type: 'http', description: 'Bad URL', url: 'http://example.com', effect: 'read' } } });
+    const r = await runTask(t, { cwd, dryRun: true }); expect(r.error).toContain('HTTPS');
+  });
   it('checks returned usage before executing side effects', async () => {
     const t = writing(); t.budget.maxOutputTokens = 10;
     const p: Provider = { turn: async () => ({ text: '', calls: [call('write_file', { path: 'report.txt', content: 'accurate' })], usage: { input: 1, output: 11 } }) };
@@ -120,6 +128,13 @@ describe('runbooks', () => {
   it('rejects changed contracts and input data', async () => {
     const t = task(); const b = book(t); t.inputs = { issue: 2 };
     const r = await runTask(t, { cwd, runbook: b }); expect(r.error).toContain('changed');
+  });
+  it('rejects a read-after-write runbook before the first mutation', async () => {
+    const t = writing();
+    const b = book(t, { steps: [{ tool: 'write_file', arguments: { path: 'report.txt', content: 'accurate' } }, { tool: 'read_file', arguments: { path: 'source.txt' }, expectDigest: digest({ content: '' }) }] });
+    const r = await runTask(t, { cwd, runbook: b });
+    expect(r.error).toContain('precede writes'); expect(r.steps).toHaveLength(0);
+    await expect(readFile(join(cwd, 'report.txt'))).rejects.toThrow();
   });
   it('blocks writes when observed prerequisite data changed', async () => {
     const t = writing(); await writeFile(join(cwd, 'source.txt'), 'new');

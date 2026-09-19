@@ -8023,7 +8023,7 @@
       "format": "esm"
     },
     "src/engine.ts": {
-      "bytes": 10699,
+      "bytes": 11399,
       "imports": [
         {
           "path": "node:crypto",
@@ -8090,7 +8090,7 @@
       "format": "esm"
     },
     "src/action.ts": {
-      "bytes": 3652,
+      "bytes": 3830,
       "imports": [
         {
           "path": "node_modules/@actions/core/lib/core.js",
@@ -9435,7 +9435,7 @@
           "bytesInOutput": 48
         },
         "src/action.ts": {
-          "bytesInOutput": 3280
+          "bytesInOutput": 3453
         },
         "node_modules/zod/v4/classic/external.js": {
           "bytesInOutput": 7564
@@ -9726,7 +9726,7 @@
           "bytesInOutput": 5105
         },
         "src/engine.ts": {
-          "bytesInOutput": 10101
+          "bytesInOutput": 10795
         },
         "src/workspace.ts": {
           "bytesInOutput": 2516
@@ -9825,7 +9825,7 @@
           "bytesInOutput": 337
         }
       },
-      "bytes": 2088942
+      "bytes": 2089809
     }
   }
 }

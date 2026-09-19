@@ -43,6 +43,8 @@ outputs:
     description: Absolute path to a redacted JSON execution receipt.
   estimated-cost-usd:
     description: Estimated model cost in USD, excluding compute and external tools.
+  accounting-complete:
+    description: False if a model request failed without usable token accounting. Estimated cost then excludes unknown charges.
   model-calls:
     description: Number of model requests; always zero in runbook mode.
 runs:

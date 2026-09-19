@@ -4,3 +4,4 @@ Copyright 2026 Flock Labs and contributors
 This product includes software developed by third-party authors.
 Bundled license notices are preserved in dist/*.js and the dependency
 inventory is recorded in package-lock.json and dist/*.meta.json.
+Full bundled dependency licenses appear in THIRD_PARTY_NOTICES.md.
