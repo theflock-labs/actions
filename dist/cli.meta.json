@@ -1753,7 +1753,7 @@
       "format": "esm"
     },
     "src/workspace.ts": {
-      "bytes": 2568,
+      "bytes": 2806,
       "imports": [
         {
           "path": "node:fs/promises",
@@ -4832,8 +4832,30 @@
       ],
       "format": "esm"
     },
+    "package.json": {
+      "bytes": 947,
+      "imports": [],
+      "format": "esm",
+      "with": {
+        "type": "json"
+      }
+    },
+    "src/version.ts": {
+      "bytes": 103,
+      "imports": [
+        {
+          "path": "package.json",
+          "kind": "import-statement",
+          "original": "../package.json",
+          "with": {
+            "type": "json"
+          }
+        }
+      ],
+      "format": "esm"
+    },
     "src/tools.ts": {
-      "bytes": 7049,
+      "bytes": 7080,
       "imports": [
         {
           "path": "node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js",
@@ -4869,6 +4891,11 @@
           "path": "src/util.ts",
           "kind": "import-statement",
           "original": "./util.js"
+        },
+        {
+          "path": "src/version.ts",
+          "kind": "import-statement",
+          "original": "./version.js"
         }
       ],
       "format": "esm"
@@ -5722,7 +5749,7 @@
           "bytesInOutput": 10761
         },
         "src/workspace.ts": {
-          "bytesInOutput": 2471
+          "bytesInOutput": 2711
         },
         "node_modules/zod/v4/mini/parse.js": {
           "bytesInOutput": 14
@@ -5797,13 +5824,19 @@
           "bytesInOutput": 14604
         },
         "src/tools.ts": {
-          "bytesInOutput": 6733
+          "bytesInOutput": 6734
         },
         "src/commands.ts": {
           "bytesInOutput": 2099
         },
         "src/util.ts": {
           "bytesInOutput": 2598
+        },
+        "package.json": {
+          "bytesInOutput": 920
+        },
+        "src/version.ts": {
+          "bytesInOutput": 40
         },
         "src/providers.ts": {
           "bytesInOutput": 5599
@@ -5818,7 +5851,7 @@
           "bytesInOutput": 337
         }
       },
-      "bytes": 1345963
+      "bytes": 1347200
     }
   }
 }

@@ -1,11 +1,11 @@
 # Validation record
 
-Release target: 0.1.0. Update this file with evidence, not intent.
+Release target: 0.1.1. Update this file with evidence, not intent.
 
 ## Verified locally
 
 - TypeScript strict checking and bundled Action/CLI generation pass.
-- 58 deterministic tests pass, including engine outcomes and repair, budget denial, incomplete billing, filesystem traversal and links, replay guards/promotion, provider protocol parsing, command environment/timeout/output limits, HTTP redirect rejection, and real stdio and Streamable HTTP MCP fixtures.
+- 65 deterministic tests pass, including engine outcomes and repair, budget denial, incomplete billing, filesystem traversal, credential paths, Windows aliases and links, replay guards/promotion, provider protocol parsing, command environment/timeout/output limits, HTTP redirect rejection, and real stdio and Streamable HTTP MCP fixtures.
 - The same suite passes on Node 24.21.0, the supported release runtime.
 - The bundled CLI executes the reviewed manifest runbook and independently verifies its result with zero model calls and no API key.
 - npm dependency audit reports no known vulnerabilities at initial installation. This is a point-in-time advisory check, not a security audit.
@@ -18,7 +18,7 @@ Release target: 0.1.0. Update this file with evidence, not intent.
 
 ## Release gates still to record
 
-- Release: [v0.1.0 preview](https://github.com/theflock-labs/actions/releases/tag/v0.1.0). See the release page for its exact commit and runtime dependency SBOM.
+- Release: [v0.1.0 preview](https://github.com/theflock-labs/actions/releases/tag/v0.1.0), followed by [v0.1.1 hardening](https://github.com/theflock-labs/actions/releases/tag/v0.1.1). See release pages for exact commits and runtime dependency SBOMs.
 - Live OpenAI, Anthropic and compatible-provider acceptance. No inference key is present in the authoring environment. Mock protocol tests and local MCP tests do not establish live provider quality.
 - Real service integration acceptance under customer-owned least-privilege credentials.
 - Independent security review, design-partner outcomes, repeated-run savings, willingness-to-pay, and retention. None has been claimed or manufactured.

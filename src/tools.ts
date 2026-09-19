@@ -7,6 +7,7 @@ import type { Tool, JsonObject } from './types.js';
 import { Workspace } from './workspace.js';
 import { commandEnv, runCommand } from './commands.js';
 import { validator, checkedUrl, authHeaders, limitedText } from './util.js';
+import { version } from './version.js';
 
 const pathSchema = { type: 'object', properties: { path: { type: 'string', minLength: 1 } }, required: ['path'], additionalProperties: false };
 export class ToolRegistry {
@@ -67,7 +68,7 @@ export class ToolRegistry {
     }
     for (const server of task.mcp) {
       signal.throwIfAborted();
-      const client = new Client({ name: 'flock-actions', version: '0.1.0' });
+      const client = new Client({ name: 'flock-actions', version });
       this.clients.push(client);
       const transport = server.transport === 'stdio'
         ? new StdioClientTransport({ command: server.command ?? (() => { throw new Error('MCP stdio requires command'); })(), args: server.args, env: commandEnv(server.env) as Record<string, string>, stderr: 'pipe', cwd: workspace.root })

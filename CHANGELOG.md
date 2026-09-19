@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-09-20
+
+- Block additional common credential paths in built-in file tools.
+- Reject Windows alternate-stream syntax and trailing dot/space path aliases on all platforms.
+- Protect workflow and task directories regardless of filesystem case sensitivity.
+- Add seven path-boundary regression cases; the deterministic suite now contains 65 tests.
+- Derive the MCP client version from the package version.
+
+The preview limitations and live-validation status from 0.1.0 still apply.
+
 ## 0.1.0 — 2026-09-20
 
 First public preview of Flock Actions.

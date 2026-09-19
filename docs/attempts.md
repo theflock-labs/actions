@@ -19,3 +19,7 @@ GitHub Agentic Workflows already implements safe outputs, multi-provider engines
 ## Missing usage is not a zero-dollar request
 
 Review found that an API transport error could leave an estimate of zero even though the submitted request might be billed. Receipts and the Action now expose `accountingComplete` / `accounting-complete`; job summaries explicitly mark incomplete metering instead of presenting a complete price. Existing known usage remains available. No automatic retry is introduced.
+
+## Cross-platform credential paths
+
+Final boundary review identified additional common credential files (`.npmrc`, `.netrc`, `.pypirc`, `.git-credentials`, Docker and Kubernetes config) and Windows path aliases as gaps in built-in file protections. The follow-up patch denies those paths, alternate-stream colons and trailing dot/space components and matches protected workflow/task directories case-insensitively. These controls still do not replace runner isolation or detect arbitrary secrets in allowed files.

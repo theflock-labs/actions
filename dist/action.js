@@ -1501,36 +1501,36 @@ var require_diagnostics = __commonJS({
       const debuglog = fetchDebuglog.enabled ? fetchDebuglog : undiciDebugLog;
       diagnosticsChannel.channel("undici:client:beforeConnect").subscribe((evt) => {
         const {
-          connectParams: { version: version2, protocol, port, host }
+          connectParams: { version: version3, protocol, port, host }
         } = evt;
         debuglog(
           "connecting to %s using %s%s",
           `${host}${port ? `:${port}` : ""}`,
           protocol,
-          version2
+          version3
         );
       });
       diagnosticsChannel.channel("undici:client:connected").subscribe((evt) => {
         const {
-          connectParams: { version: version2, protocol, port, host }
+          connectParams: { version: version3, protocol, port, host }
         } = evt;
         debuglog(
           "connected to %s using %s%s",
           `${host}${port ? `:${port}` : ""}`,
           protocol,
-          version2
+          version3
         );
       });
       diagnosticsChannel.channel("undici:client:connectError").subscribe((evt) => {
         const {
-          connectParams: { version: version2, protocol, port, host },
+          connectParams: { version: version3, protocol, port, host },
           error: error63
         } = evt;
         debuglog(
           "connection to %s using %s%s errored - %s",
           `${host}${port ? `:${port}` : ""}`,
           protocol,
-          version2,
+          version3,
           error63.message
         );
       });
@@ -1579,31 +1579,31 @@ var require_diagnostics = __commonJS({
         const debuglog = undiciDebugLog.enabled ? undiciDebugLog : websocketDebuglog;
         diagnosticsChannel.channel("undici:client:beforeConnect").subscribe((evt) => {
           const {
-            connectParams: { version: version2, protocol, port, host }
+            connectParams: { version: version3, protocol, port, host }
           } = evt;
           debuglog(
             "connecting to %s%s using %s%s",
             host,
             port ? `:${port}` : "",
             protocol,
-            version2
+            version3
           );
         });
         diagnosticsChannel.channel("undici:client:connected").subscribe((evt) => {
           const {
-            connectParams: { version: version2, protocol, port, host }
+            connectParams: { version: version3, protocol, port, host }
           } = evt;
           debuglog(
             "connected to %s%s using %s%s",
             host,
             port ? `:${port}` : "",
             protocol,
-            version2
+            version3
           );
         });
         diagnosticsChannel.channel("undici:client:connectError").subscribe((evt) => {
           const {
-            connectParams: { version: version2, protocol, port, host },
+            connectParams: { version: version3, protocol, port, host },
             error: error63
           } = evt;
           debuglog(
@@ -1611,7 +1611,7 @@ var require_diagnostics = __commonJS({
             host,
             port ? `:${port}` : "",
             protocol,
-            version2,
+            version3,
             error63.message
           );
         });
@@ -29215,10 +29215,10 @@ function nanoidOfLength(length) {
 var duration = /^P(?:(\d+W)|(?!.*W)(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+([.,]\d+)?S)?)?)$/;
 var extendedDuration = /^[-+]?P(?!$)(?:(?:[-+]?\d+Y)|(?:[-+]?\d+[.,]\d+Y$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:(?:[-+]?\d+W)|(?:[-+]?\d+[.,]\d+W$))?(?:(?:[-+]?\d+D)|(?:[-+]?\d+[.,]\d+D$))?(?:T(?=[\d+-])(?:(?:[-+]?\d+H)|(?:[-+]?\d+[.,]\d+H$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:[-+]?\d+(?:[.,]\d+)?S)?)??$/;
 var guid = /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$/;
-var uuid = (version2) => {
-  if (!version2)
+var uuid = (version3) => {
+  if (!version3)
     return /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/;
-  return new RegExp(`^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-${version2}[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$`);
+  return new RegExp(`^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-${version3}[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$`);
 };
 var uuid4 = /* @__PURE__ */ uuid(4);
 var uuid6 = /* @__PURE__ */ uuid(6);
@@ -46671,10 +46671,10 @@ function fromJSONSchema(schema2, params) {
   } catch {
     throw new Error("fromJSONSchema input is not valid JSON (possibly cyclic); use $defs/$ref for recursive schemas");
   }
-  const version2 = detectVersion(normalized, params?.defaultTarget);
+  const version3 = detectVersion(normalized, params?.defaultTarget);
   const defs = normalized.$defs || normalized.definitions || {};
   const ctx = {
-    version: version2,
+    version: version3,
     defs,
     refs: /* @__PURE__ */ new Map(),
     processing: /* @__PURE__ */ new Set(),
@@ -46987,17 +46987,18 @@ import { resolve as resolve2 } from "node:path";
 // src/workspace.ts
 import { lstat as lstat2, realpath, readFile as readFile2, writeFile as writeFile2, mkdir as mkdir2 } from "node:fs/promises";
 import { isAbsolute, relative, resolve, sep, dirname } from "node:path";
-var blocked = /(^|\/)(\.git|\.flock|node_modules|\.ssh|\.aws|\.config|\.env(?:\.[^/]*)?|[^/]*\.(?:pem|key|p12))($|\/)/i;
-var protectedWrite = /(^|\/)(\.github|\.flock-tasks)($|\/)/;
+var blocked = /(^|\/)(\.git|\.flock|node_modules|\.ssh|\.aws|\.config|\.docker|\.kube|\.npmrc|\.pypirc|\.netrc|\.git-credentials|\.env(?:\.[^/]*)?|[^/]*\.(?:pem|key|p12))($|\/)/i;
+var protectedWrite = /(^|\/)(\.github|\.flock-tasks)($|\/)/i;
 var Workspace = class {
   constructor(root) {
     this.root = root;
   }
   root;
   async path(path, allowed, write = false) {
-    if (!path || isAbsolute(path) || path.includes("\\") || path.includes("\0")) throw new Error("Path must be relative to the workspace");
+    if (!path || isAbsolute(path) || path.includes("\\") || path.includes("\0") || path.includes(":")) throw new Error("Path must be relative to the workspace without alternate streams");
     const full = resolve(this.root, path);
     const normalized = relative(this.root, full).split(sep).join("/");
+    if (normalized.split("/").some((part) => /[. ]$/.test(part))) throw new Error("Path components may not end in dots or spaces");
     if (!normalized && (write || !allowed.includes(".")) || normalized.startsWith("../") || normalized === ".." || blocked.test(normalized) || write && protectedWrite.test(normalized)) throw new Error("Protected or escaping path");
     const permits = allowed.some((p) => {
       const rule = p.replace(/\/$/, "");
@@ -52045,8 +52046,8 @@ var StreamableHTTPClientTransport = class {
       throw error63;
     }
   }
-  setProtocolVersion(version2) {
-    this._protocolVersion = version2;
+  setProtocolVersion(version3) {
+    this._protocolVersion = version3;
   }
   get protocolVersion() {
     return this._protocolVersion;
@@ -52194,6 +52195,46 @@ async function limitedText(response, maxBytes = 262144) {
   return Buffer.concat(chunks).toString("utf8");
 }
 
+// package.json
+var package_default = {
+  name: "@flock-labs/actions",
+  version: "0.1.1",
+  description: "Agentic automation with outcome contracts and zero-inference runbooks.",
+  type: "module",
+  private: true,
+  license: "Apache-2.0",
+  engines: {
+    node: ">=24"
+  },
+  repository: {
+    type: "git",
+    url: "https://github.com/theflock-labs/actions.git"
+  },
+  scripts: {
+    build: "node scripts/build.mjs",
+    typecheck: "tsc --noEmit",
+    test: "vitest run",
+    check: "npm run typecheck && npm test && npm run build",
+    flock: "node dist/cli.js",
+    demo: "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json"
+  },
+  dependencies: {
+    "@actions/core": "3.0.1",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    ajv: "8.20.0",
+    zod: "4.6.5"
+  },
+  devDependencies: {
+    "@types/node": "^24.0.0",
+    esbuild: "0.28.2",
+    typescript: "7.0.2",
+    vitest: "5.0.1"
+  }
+};
+
+// src/version.ts
+var version2 = package_default.version;
+
 // src/tools.ts
 var pathSchema = { type: "object", properties: { path: { type: "string", minLength: 1 } }, required: ["path"], additionalProperties: false };
 var ToolRegistry = class {
@@ -52285,7 +52326,7 @@ var ToolRegistry = class {
     }
     for (const server of task.mcp) {
       signal.throwIfAborted();
-      const client = new Client({ name: "flock-actions", version: "0.1.0" });
+      const client = new Client({ name: "flock-actions", version: version2 });
       this.clients.push(client);
       const transport = server.transport === "stdio" ? new StdioClientTransport({ command: server.command ?? (() => {
         throw new Error("MCP stdio requires command");

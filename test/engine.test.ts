@@ -159,7 +159,7 @@ describe('runbooks', () => {
   });
 });
 describe('filesystem boundary', () => {
-  it.each(['../outside.txt', '/etc/passwd', '.git/config', '.env', '.env.production', '.aws/credentials', 'key.pem', 'a\\b'])('rejects %s', async path => {
+  it.each(['../outside.txt', '/etc/passwd', '.git/config', '.env', '.env.production', '.aws/credentials', '.npmrc', '.netrc', '.docker/config.json', '.kube/config', 'key.pem', 'a\\b', 'report.txt:stream', '.env ', '.env.'])('rejects %s', async path => {
     await expect(new Workspace(cwd).read(path, ['.'])).rejects.toThrow();
   });
   it('rejects a symlink even if it points to a readable file', async () => {
@@ -172,6 +172,7 @@ describe('filesystem boundary', () => {
   });
   it('protects workflow definitions and task contracts from writes', async () => {
     await expect(new Workspace(cwd).write('.github/workflows/attack.yml', 'attack', ['.'])).rejects.toThrow('Protected');
+    await expect(new Workspace(cwd).write('.GITHUB/workflows/attack.yml', 'attack', ['.'])).rejects.toThrow('Protected');
     await expect(new Workspace(cwd).write('.flock-tasks/task.json', '{}', ['.'])).rejects.toThrow('Protected');
   });
   it('does not treat file prefixes as directory grants', async () => {

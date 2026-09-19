@@ -1,12 +1,17 @@
 {
   "name": "@flock-labs/actions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Agentic automation with outcome contracts and zero-inference runbooks.",
   "type": "module",
   "private": true,
   "license": "Apache-2.0",
-  "engines": { "node": ">=24" },
-  "repository": { "type": "git", "url": "https://github.com/theflock-labs/actions.git" },
+  "engines": {
+    "node": ">=24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theflock-labs/actions.git"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",

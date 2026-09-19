@@ -1,14 +1,15 @@
 import { lstat, realpath, readFile, writeFile, mkdir } from 'node:fs/promises';
 import { isAbsolute, relative, resolve, sep, dirname } from 'node:path';
 
-const blocked = /(^|\/)(\.git|\.flock|node_modules|\.ssh|\.aws|\.config|\.env(?:\.[^/]*)?|[^/]*\.(?:pem|key|p12))($|\/)/i;
-const protectedWrite = /(^|\/)(\.github|\.flock-tasks)($|\/)/;
+const blocked = /(^|\/)(\.git|\.flock|node_modules|\.ssh|\.aws|\.config|\.docker|\.kube|\.npmrc|\.pypirc|\.netrc|\.git-credentials|\.env(?:\.[^/]*)?|[^/]*\.(?:pem|key|p12))($|\/)/i;
+const protectedWrite = /(^|\/)(\.github|\.flock-tasks)($|\/)/i;
 export class Workspace {
   constructor(readonly root: string) {}
   async path(path: string, allowed: string[], write = false): Promise<string> {
-    if (!path || isAbsolute(path) || path.includes('\\') || path.includes('\0')) throw new Error('Path must be relative to the workspace');
+    if (!path || isAbsolute(path) || path.includes('\\') || path.includes('\0') || path.includes(':')) throw new Error('Path must be relative to the workspace without alternate streams');
     const full = resolve(this.root, path);
     const normalized = relative(this.root, full).split(sep).join('/');
+    if (normalized.split('/').some(part => /[. ]$/.test(part))) throw new Error('Path components may not end in dots or spaces');
     if ((!normalized && (write || !allowed.includes('.'))) || normalized.startsWith('../') || normalized === '..' || blocked.test(normalized) || (write && protectedWrite.test(normalized))) throw new Error('Protected or escaping path');
     const permits = allowed.some(p => {
       const rule = p.replace(/\/$/, '');
