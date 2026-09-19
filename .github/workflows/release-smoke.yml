@@ -1,0 +1,32 @@
+name: Published Action smoke test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  consumer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: v0.1.1
+          persist-credentials: false
+      - name: Consume the public version tag
+        id: action
+        uses: theflock-labs/actions@v0.1.1
+        with:
+          task-file: examples/runbook/task.json
+          mode: runbook
+          runbook: examples/runbook/runbook.json
+      - name: Check outcome and metering
+        env:
+          STATUS: ${{ steps.action.outputs.status }}
+          CALLS: ${{ steps.action.outputs.model-calls }}
+          METERED: ${{ steps.action.outputs.accounting-complete }}
+        run: node -e 'if(process.env.STATUS!=="verified" || process.env.CALLS!=="0" || process.env.METERED!=="true") process.exit(1)'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: public-release-receipt
+          path: ${{ steps.action.outputs.receipt-path }}
+          retention-days: 7
