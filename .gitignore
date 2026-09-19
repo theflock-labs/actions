@@ -1,0 +1,10 @@
+node_modules/
+.flock/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+release-manifest.json
+change-summary.md

@@ -1,0 +1,50 @@
+name: Flock Actions
+description: Agentic automation with verified outcomes, bounded costs, and zero-inference runbooks.
+author: Flock Labs
+branding:
+  icon: feather
+  color: purple
+inputs:
+  prompt:
+    description: Trusted task instructions. Overrides the prompt in task-file. Required when task-file is omitted.
+    required: false
+  task-file:
+    description: Path to a trusted Flock task contract (JSON).
+    required: false
+  inputs:
+    description: JSON object containing untrusted task data. Replaces task-file inputs.
+    required: false
+  api-key:
+    description: Model provider API key. Not needed for dry-run or runbook modes.
+    required: false
+  provider:
+    description: 'Override provider: openai, anthropic, or openai-compatible.'
+    required: false
+  model:
+    description: Override model name. Configure pricing in task-file for non-default models.
+    required: false
+  max-cost-usd:
+    description: Estimated inference budget in USD. Not an invoice cap; runner and external tool costs excluded.
+    required: false
+  mode:
+    description: 'agent, runbook, or dry-run.'
+    default: agent
+  runbook:
+    description: Path to a reviewed runbook. Requires mode=runbook.
+    required: false
+outputs:
+  status:
+    description: verified, unverified, failed, or dry-run.
+  verified:
+    description: Whether all configured independent outcome checks passed.
+  result:
+    description: Redacted result as a JSON object.
+  receipt-path:
+    description: Absolute path to a redacted JSON execution receipt.
+  estimated-cost-usd:
+    description: Estimated model cost in USD, excluding compute and external tools.
+  model-calls:
+    description: Number of model requests; always zero in runbook mode.
+runs:
+  using: node24
+  main: dist/action.js

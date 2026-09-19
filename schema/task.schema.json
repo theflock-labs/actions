@@ -1,0 +1,572 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100000
+    },
+    "inputs": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "context": {
+      "default": [],
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "model": {
+      "default": {
+        "provider": "openai",
+        "name": "gpt-5-mini",
+        "allowInsecureLocalhost": false
+      },
+      "type": "object",
+      "properties": {
+        "provider": {
+          "default": "openai",
+          "type": "string",
+          "enum": [
+            "openai",
+            "anthropic",
+            "openai-compatible"
+          ]
+        },
+        "name": {
+          "default": "gpt-5-mini",
+          "type": "string",
+          "minLength": 1
+        },
+        "baseUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "apiKeyEnv": {
+          "type": "string"
+        },
+        "allowInsecureLocalhost": {
+          "default": false,
+          "type": "boolean"
+        },
+        "inputUsdPerMillion": {
+          "type": "number",
+          "minimum": 0
+        },
+        "outputUsdPerMillion": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "provider",
+        "name",
+        "allowInsecureLocalhost"
+      ],
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "maxTurns": {
+          "default": 8,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "maxToolCalls": {
+          "default": 24,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500
+        },
+        "maxInputTokens": {
+          "default": 100000,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000000
+        },
+        "maxOutputTokens": {
+          "default": 16000,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        },
+        "maxOutputTokensPerTurn": {
+          "default": 2048,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128000
+        },
+        "maxCostUsd": {
+          "default": 1,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "maxDurationSeconds": {
+          "default": 300,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        }
+      },
+      "required": [
+        "maxTurns",
+        "maxToolCalls",
+        "maxInputTokens",
+        "maxOutputTokens",
+        "maxOutputTokensPerTurn",
+        "maxCostUsd",
+        "maxDurationSeconds"
+      ],
+      "additionalProperties": false
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "write": {
+          "default": false,
+          "type": "boolean"
+        },
+        "readPaths": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "writePaths": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "write",
+        "readPaths",
+        "writePaths"
+      ],
+      "additionalProperties": false
+    },
+    "tools": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,63}$"
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inputSchema": {
+                "default": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                },
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "effect": {
+                "default": "write",
+                "type": "string",
+                "enum": [
+                  "read",
+                  "write"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "command"
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1
+              },
+              "args": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "env": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Z_][A-Z0-9_]*$"
+                }
+              },
+              "timeoutSeconds": {
+                "default": 30,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 300
+              }
+            },
+            "required": [
+              "description",
+              "inputSchema",
+              "effect",
+              "type",
+              "command",
+              "args",
+              "env",
+              "timeoutSeconds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inputSchema": {
+                "default": {
+                  "type": "object",
+                  "properties": {},
+                  "additionalProperties": false
+                },
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              },
+              "effect": {
+                "default": "write",
+                "type": "string",
+                "enum": [
+                  "read",
+                  "write"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "http"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "method": {
+                "default": "GET",
+                "type": "string",
+                "enum": [
+                  "GET",
+                  "POST",
+                  "PUT",
+                  "PATCH",
+                  "DELETE"
+                ]
+              },
+              "headers": {
+                "default": {},
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "auth": {
+                "type": "object",
+                "properties": {
+                  "env": {
+                    "type": "string",
+                    "pattern": "^[A-Z_][A-Z0-9_]*$"
+                  },
+                  "header": {
+                    "default": "Authorization",
+                    "type": "string"
+                  },
+                  "prefix": {
+                    "default": "Bearer ",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "env",
+                  "header",
+                  "prefix"
+                ],
+                "additionalProperties": false
+              },
+              "allowInsecureLocalhost": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "description",
+              "inputSchema",
+              "effect",
+              "type",
+              "url",
+              "method",
+              "headers",
+              "allowInsecureLocalhost"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "mcp": {
+      "default": [],
+      "maxItems": 10,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,63}$"
+          },
+          "transport": {
+            "type": "string",
+            "enum": [
+              "stdio",
+              "http"
+            ]
+          },
+          "command": {
+            "type": "string"
+          },
+          "args": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "env": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "auth": {
+            "type": "object",
+            "properties": {
+              "env": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]*$"
+              },
+              "header": {
+                "default": "Authorization",
+                "type": "string"
+              },
+              "prefix": {
+                "default": "Bearer ",
+                "type": "string"
+              }
+            },
+            "required": [
+              "env",
+              "header",
+              "prefix"
+            ],
+            "additionalProperties": false
+          },
+          "allowInsecureLocalhost": {
+            "default": false,
+            "type": "boolean"
+          },
+          "tools": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,63}$"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "effect": {
+                  "type": "string",
+                  "enum": [
+                    "read",
+                    "write"
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "effect"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "name",
+          "transport",
+          "args",
+          "env",
+          "allowInsecureLocalhost",
+          "tools"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "resultSchema": {
+      "default": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {}
+    },
+    "verifiers": {
+      "default": [],
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "command"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1
+              },
+              "args": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "env": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Z_][A-Z0-9_]*$"
+                }
+              },
+              "timeoutSeconds": {
+                "default": 30,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 300
+              }
+            },
+            "required": [
+              "type",
+              "name",
+              "command",
+              "args",
+              "env",
+              "timeoutSeconds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "file"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "contains": {
+                "type": "string"
+              },
+              "jsonSchema": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "type",
+              "name",
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "prompt",
+    "inputs",
+    "context",
+    "model",
+    "budget",
+    "permissions",
+    "tools",
+    "mcp",
+    "resultSchema",
+    "verifiers"
+  ],
+  "additionalProperties": false
+}

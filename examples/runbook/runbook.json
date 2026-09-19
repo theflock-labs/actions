@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "reviewed": true,
+  "taskDigest": "72d16d0985fc73f2f2fa1ea37ee341f5269fa50b0c97ea64977f64838055e5d2",
+  "inputsDigest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "guards": {},
+  "steps": [
+    {
+      "tool": "write_file",
+      "arguments": {
+        "path": "release-manifest.json",
+        "content": "{\"name\":\"flock-demo\",\"version\":\"1.0.0\"}\n"
+      }
+    }
+  ],
+  "result": {
+    "path": "release-manifest.json"
+  }
+}

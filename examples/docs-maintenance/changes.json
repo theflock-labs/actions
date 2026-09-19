@@ -1,0 +1,5 @@
+[
+  { "id": "CHANGE-101", "description": "CSV exports now preserve Unicode characters in column headings." },
+  { "id": "CHANGE-102", "description": "An empty report exports a header-only CSV instead of throwing an error." },
+  { "id": "CHANGE-103", "description": "Administrators can restrict report export to specific project roles." }
+]

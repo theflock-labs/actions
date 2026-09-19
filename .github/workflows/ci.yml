@@ -1,0 +1,68 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+  distribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: git diff --exit-code -- dist schema
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Run the packaged GitHub Action without an API key
+        id: demo
+        uses: ./
+        with:
+          task-file: examples/runbook/task.json
+          mode: runbook
+          runbook: examples/runbook/runbook.json
+      - name: Assert independent success and zero inference
+        env:
+          STATUS: ${{ steps.demo.outputs.status }}
+          CALLS: ${{ steps.demo.outputs.model-calls }}
+        run: node -e 'if(process.env.STATUS!=="verified" || process.env.CALLS!=="0") process.exit(1)'
+      - name: Validate prompt task without inference
+        uses: ./
+        with:
+          task-file: examples/triage/task.json
+          mode: dry-run
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: deterministic-action-receipt
+          path: ${{ steps.demo.outputs.receipt-path }}
+          retention-days: 7

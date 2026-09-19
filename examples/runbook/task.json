@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "name": "Deterministic release manifest",
+  "prompt": "Write a release manifest to release-manifest.json with name flock-demo and version 1.0.0. Return its path. This already has a known procedure, so use the reviewed runbook in CI.",
+  "permissions": { "write": true, "writePaths": ["release-manifest.json"] },
+  "resultSchema": {
+    "type": "object", "properties": { "path": { "const": "release-manifest.json" } },
+    "required": ["path"], "additionalProperties": false
+  },
+  "verifiers": [{
+    "type": "file", "name": "Exact release manifest", "path": "release-manifest.json",
+    "jsonSchema": {
+      "type": "object", "properties": { "name": { "const": "flock-demo" }, "version": { "const": "1.0.0" } },
+      "required": ["name", "version"], "additionalProperties": false
+    }
+  }]
+}

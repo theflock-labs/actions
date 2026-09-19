@@ -1,0 +1,26 @@
+name: Triage report
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: theflock-labs/actions@v0.1.0
+        id: triage
+        with:
+          task-file: examples/triage/task.json
+          api-key: ${{ secrets.OPENAI_API_KEY }}
+          inputs: ${{ toJSON(github.event.issue) }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: triage-receipt
+          path: ${{ steps.triage.outputs.receipt-path }}
+          retention-days: 7

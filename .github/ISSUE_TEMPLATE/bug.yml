@@ -1,0 +1,16 @@
+name: Bug report
+description: Report incorrect or unsafe behavior without including credentials.
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction and version
+      description: Include a redacted task, runtime version, and receipt status. Never include secrets.
+    validations:
+      required: true
