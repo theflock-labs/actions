@@ -22,7 +22,7 @@ OpenAI uses the standard API directly. Anthropic uses Messages directly; set the
 - **Gemini:** Google documents an OpenAI-compatible endpoint. Configure the URL, a tool-capable model, key and rates; test the chosen model's required-tool and usage behavior. It is a documented route, not a certified live adapter. [Google compatibility guide](https://ai.google.dev/gemini-api/docs/openai).
 - **Ollama, vLLM and other local servers:** use `openai-compatible`, explicit loopback HTTP permission, an appropriate tool-capable model and configured prices (zero if accounting for inference elsewhere). Measure hardware cost separately. No automatic model download.
 - **OpenRouter, Groq, Together, Fireworks and hosted gateways:** candidates for the compatible route. Feature support and token fields vary; add an account-specific acceptance test before enabling writes. No vendor-specific compatibility claim is made here.
-- **Existing Codex/Claude/OpenHands workers:** invoke a trusted wrapper through the command or HTTP adapter and verify its output. Such a wrapper is trusted code and has its own cost/isolation controls. Flock v0.1 does not recursively meter an external agent's hidden inference, so do not include those costs in its reported inference budget.
+- **Existing Codex/Claude/OpenHands workers:** invoke a trusted wrapper through the command or HTTP adapter and verify its output. Such a wrapper is trusted code and has its own cost/isolation controls. This release does not recursively meter an external agent's hidden inference, so do not include those costs in its reported inference budget.
 
 ## Connect a command
 

@@ -35,3 +35,7 @@ A regression using a numeric secret (`1234`) reproduced invalid JSON when the sa
 ## Capture provider inputs at call time in tests
 
 An initial ground-truth isolation assertion inspected the provider mock's retained message-array reference after the engine appended the model response, producing a false positive. The test now snapshots messages when the provider is called. Expected labels are not sent in the model prompt.
+
+## Downloaded baseline artifacts retain their enclosing directory
+
+The first release-checksum preparation expected report files at the artifact download root and correctly failed its file-count assertion. GitHub preserved the `baseline-<id>/` directory from the upload glob. Enumerate reports recursively and assert exactly three before creating release checksums. No release assets were published from the failed preparation.

@@ -18,10 +18,12 @@ Release target: 0.2.0. Update this file with evidence, not intent.
 - [Expanded-suite CI](https://github.com/theflock-labs/actions/actions/runs/35474198262) passed all 58 tests on all three operating systems at commit `99bbdf413cb551896729712586afda85135de624`, including both MCP transports, replay preflight and incomplete-billing behavior. Bundles, generated schema and third-party notices reproduced in CI.
 - [0.1.1 release CI](https://github.com/theflock-labs/actions/actions/runs/35474451812) passed all 65 tests on Linux, macOS and Windows, plus bundle reproduction, dependency audit and packaged Action execution at release commit `409a5161198d93170d3c146f3e27183cb7cc1519`.
 - [Published consumer smoke test](https://github.com/theflock-labs/actions/actions/runs/35474588454) consumed `theflock-labs/actions@v0.1.1` through GitHub's public Action resolution, verified the generated manifest, asserted zero model calls and complete metering, and uploaded the actual receipt.
+- [0.2.0 release CI](https://github.com/theflock-labs/actions/actions/runs/35475963792) passed all 87 tests on Linux, macOS and Windows at commit `ad1ac0a8ef744cff14149844a85979a4189b8a07`. It reproduced bundles, schemas and synthetic fixtures, audited production dependencies, exercised the bundled offline scorer and executed the packaged Action. The release includes all three synthetic baseline reports downloaded from this run.
+- [0.2.0 public consumer smoke test](https://github.com/theflock-labs/actions/actions/runs/35476080226) successfully consumed `theflock-labs/actions@v0.2.0`, independently verified its manifest and asserted zero model calls and complete accounting.
 
 ## Release gates still to record
 
-- Release: [v0.1.0 preview](https://github.com/theflock-labs/actions/releases/tag/v0.1.0), followed by [v0.1.1 hardening](https://github.com/theflock-labs/actions/releases/tag/v0.1.1). See release pages for exact commits and runtime dependency SBOMs.
+- Releases: [v0.1.0 preview](https://github.com/theflock-labs/actions/releases/tag/v0.1.0), [v0.1.1 hardening](https://github.com/theflock-labs/actions/releases/tag/v0.1.1), and [v0.2.0 evaluation preview](https://github.com/theflock-labs/actions/releases/tag/v0.2.0). See release pages for exact commits, runtime dependency SBOMs and checksums.
 - Live OpenAI, Anthropic and compatible-provider acceptance. No inference key is present in the authoring environment. Mock protocol tests and local MCP tests do not establish live provider quality.
 - Real service integration acceptance under customer-owned least-privilege credentials.
 - Independent security review, design-partner outcomes, repeated-run savings, willingness-to-pay, and retention. None has been claimed or manufactured.

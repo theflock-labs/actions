@@ -12,6 +12,8 @@ Run `npm run eval:baseline` with Node 24. No credentials, network services, or m
 
 These counts were observed by running [the baseline](../evals/baseline.mjs) against [the authored fixtures](../evals/build-fixtures.mjs). They are regression examples deliberately including edge cases, not a representative or held-out production sample. Do not infer that these percentages predict real workloads. No live model or competitor quality result is claimed.
 
+[Release CI](https://github.com/theflock-labs/actions/actions/runs/35475963792) reproduced these counts. The [v0.2.0 release assets](https://github.com/theflock-labs/actions/releases/tag/v0.2.0) retain its three reports, including suite fingerprints, per-case outcomes and explicit imported/self-reported provenance.
+
 The lesson is narrower and useful: a model must demonstrate added value beyond a cheap baseline, and a weak acceptance check cannot prove a strong outcome. Do not aggregate the three scores into a purported general automation accuracy number.
 
 ## Run a live evaluation
