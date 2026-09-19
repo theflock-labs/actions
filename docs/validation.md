@@ -16,6 +16,7 @@ Release target: 0.1.1. Update this file with evidence, not intent.
 - [Initial CI run](https://github.com/theflock-labs/actions/actions/runs/35473899127) passed all 54 initial tests on Linux, macOS and Windows, reproduced the committed bundles, passed the production dependency audit and executed the packaged Action on an Ubuntu GitHub runner. The uploaded receipt confirms independent verification and zero model calls.
 - [Expanded-suite CI](https://github.com/theflock-labs/actions/actions/runs/35474198262) passed all 58 tests on all three operating systems at commit `99bbdf413cb551896729712586afda85135de624`, including both MCP transports, replay preflight and incomplete-billing behavior. Bundles, generated schema and third-party notices reproduced in CI.
 - [0.1.1 release CI](https://github.com/theflock-labs/actions/actions/runs/35474451812) passed all 65 tests on Linux, macOS and Windows, plus bundle reproduction, dependency audit and packaged Action execution at release commit `409a5161198d93170d3c146f3e27183cb7cc1519`.
+- [Published consumer smoke test](https://github.com/theflock-labs/actions/actions/runs/35474588454) consumed `theflock-labs/actions@v0.1.1` through GitHub's public Action resolution, verified the generated manifest, asserted zero model calls and complete metering, and uploaded the actual receipt.
 
 ## Release gates still to record
 

@@ -23,3 +23,7 @@ Review found that an API transport error could leave an estimate of zero even th
 ## Cross-platform credential paths
 
 Final boundary review identified additional common credential files (`.npmrc`, `.netrc`, `.pypirc`, `.git-credentials`, Docker and Kubernetes config) and Windows path aliases as gaps in built-in file protections. The follow-up patch denies those paths, alternate-stream colons and trailing dot/space components and matches protected workflow/task directories case-insensitively. These controls still do not replace runner isolation or detect arbitrary secrets in allowed files.
+
+## GitHub workflow registration is eventually consistent
+
+An immediate dispatch of the newly pushed `release-smoke.yml` returned HTTP 404 even though the push succeeded. No run had started. Listing workflows later confirmed registration; dispatching its observed workflow ID then succeeded. Check registration and run state before retrying so transient API lag does not create duplicate runs.
