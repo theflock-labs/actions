@@ -2990,7 +2990,7 @@ var require_compile = __commonJS({
       const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve3.call(this, root, ref);
+      let _sch = resolve4.call(this, root, ref);
       if (_sch === void 0) {
         const schema2 = (_a3 = root.localRefs) === null || _a3 === void 0 ? void 0 : _a3[ref];
         const { schemaId } = this.opts;
@@ -3017,7 +3017,7 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve3(root, ref) {
+    function resolve4(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string")
         ref = sch;
@@ -3847,7 +3847,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve3(baseURI, relativeURI, options) {
+    function resolve4(baseURI, relativeURI, options) {
       const schemelessOptions = options ? Object.assign({ scheme: "null" }, options) : { scheme: "null" };
       const {
         parsed: baseParsed,
@@ -4216,7 +4216,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize,
-      resolve: resolve3,
+      resolve: resolve4,
       resolveComponent,
       equal,
       serialize,
@@ -7228,15 +7228,15 @@ var require_windows = __commonJS({
       }
       return false;
     }
-    function checkStat(stat, path, options) {
-      if (!stat.isSymbolicLink() && !stat.isFile()) {
+    function checkStat(stat2, path, options) {
+      if (!stat2.isSymbolicLink() && !stat2.isFile()) {
         return false;
       }
       return checkPathExt(path, options);
     }
     function isexe(path, options, cb) {
-      fs.stat(path, function(er, stat) {
-        cb(er, er ? false : checkStat(stat, path, options));
+      fs.stat(path, function(er, stat2) {
+        cb(er, er ? false : checkStat(stat2, path, options));
       });
     }
     function sync(path, options) {
@@ -7252,20 +7252,20 @@ var require_mode = __commonJS({
     isexe.sync = sync;
     var fs = __require("fs");
     function isexe(path, options, cb) {
-      fs.stat(path, function(er, stat) {
-        cb(er, er ? false : checkStat(stat, options));
+      fs.stat(path, function(er, stat2) {
+        cb(er, er ? false : checkStat(stat2, options));
       });
     }
     function sync(path, options) {
       return checkStat(fs.statSync(path), options);
     }
-    function checkStat(stat, options) {
-      return stat.isFile() && checkMode(stat, options);
+    function checkStat(stat2, options) {
+      return stat2.isFile() && checkMode(stat2, options);
     }
-    function checkMode(stat, options) {
-      var mod = stat.mode;
-      var uid = stat.uid;
-      var gid = stat.gid;
+    function checkMode(stat2, options) {
+      var mod = stat2.mode;
+      var uid = stat2.uid;
+      var gid = stat2.gid;
       var myUid = options.uid !== void 0 ? options.uid : process.getuid && process.getuid();
       var myGid = options.gid !== void 0 ? options.gid : process.getgid && process.getgid();
       var u = parseInt("100", 8);
@@ -7299,12 +7299,12 @@ var require_isexe = __commonJS({
         if (typeof Promise !== "function") {
           throw new TypeError("callback not provided");
         }
-        return new Promise(function(resolve3, reject) {
+        return new Promise(function(resolve4, reject) {
           isexe(path, options || {}, function(er, is) {
             if (er) {
               reject(er);
             } else {
-              resolve3(is);
+              resolve4(is);
             }
           });
         });
@@ -7370,27 +7370,27 @@ var require_which = __commonJS({
         opt = {};
       const { pathEnv, pathExt, pathExtExe } = getPathInfo(cmd, opt);
       const found = [];
-      const step = (i) => new Promise((resolve3, reject) => {
+      const step = (i) => new Promise((resolve4, reject) => {
         if (i === pathEnv.length)
-          return opt.all && found.length ? resolve3(found) : reject(getNotFoundError(cmd));
+          return opt.all && found.length ? resolve4(found) : reject(getNotFoundError(cmd));
         const ppRaw = pathEnv[i];
         const pathPart = /^".*"$/.test(ppRaw) ? ppRaw.slice(1, -1) : ppRaw;
         const pCmd = path.join(pathPart, cmd);
         const p = !pathPart && /^\.[\\\/]/.test(cmd) ? cmd.slice(0, 2) + pCmd : pCmd;
-        resolve3(subStep(p, i, 0));
+        resolve4(subStep(p, i, 0));
       });
-      const subStep = (p, i, ii) => new Promise((resolve3, reject) => {
+      const subStep = (p, i, ii) => new Promise((resolve4, reject) => {
         if (ii === pathExt.length)
-          return resolve3(step(i + 1));
+          return resolve4(step(i + 1));
         const ext = pathExt[ii];
         isexe(p + ext, { pathExt: pathExtExe }, (er, is) => {
           if (!er && is) {
             if (opt.all)
               found.push(p + ext);
             else
-              return resolve3(p + ext);
+              return resolve4(p + ext);
           }
-          return resolve3(subStep(p, i, ii + 1));
+          return resolve4(subStep(p, i, ii + 1));
         });
       });
       return cb ? step(0).then((res) => cb(null, res), cb) : step(0);
@@ -8528,9 +8528,9 @@ function floatSafeRemainder(val, step) {
   return ratio - roundedRatio;
 }
 var EVALUATING = /* @__PURE__ */ Symbol("evaluating");
-function defineLazy(object3, key, getter) {
+function defineLazy(object4, key, getter) {
   let value = void 0;
-  Object.defineProperty(object3, key, {
+  Object.defineProperty(object4, key, {
     get() {
       if (value === EVALUATING) {
         return void 0;
@@ -8542,7 +8542,7 @@ function defineLazy(object3, key, getter) {
       return value;
     },
     set(v) {
-      Object.defineProperty(object3, key, {
+      Object.defineProperty(object4, key, {
         value: v
         // configurable: true,
       });
@@ -12832,7 +12832,7 @@ var recursive = /* @__PURE__ */ new WeakMap();
 var NONE = 0;
 var ASSUMED = 1;
 var PROVEN = 2;
-function isRecursive(inst, stack, resolve3) {
+function isRecursive(inst, stack, resolve4) {
   const cached2 = recursive.get(inst);
   if (cached2 !== void 0)
     return cached2 ? PROVEN : NONE;
@@ -12842,7 +12842,7 @@ function isRecursive(inst, stack, resolve3) {
   let result = NONE;
   const check2 = (child) => {
     if (result !== PROVEN && child?._zod) {
-      const answer = isRecursive(child, stack, resolve3);
+      const answer = isRecursive(child, stack, resolve4);
       if (answer > result)
         result = answer;
     }
@@ -12853,7 +12853,7 @@ function isRecursive(inst, stack, resolve3) {
       const desc = Object.getOwnPropertyDescriptor(sh, key);
       if (spread && !desc.enumerable)
         continue;
-      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve3) : NONE;
+      const child = desc.get ? ASSUMED : desc.value?._zod ? isRecursive(desc.value, stack, resolve4) : NONE;
       if (child > answer)
         answer = child;
     }
@@ -12917,7 +12917,7 @@ function isRecursive(inst, stack, resolve3) {
       break;
     // `$ZodLazy` caches its inner on the def, so a resolved edge is followed exactly
     case "lazy": {
-      const inner = def._cachedInner ?? (resolve3 ? inst._zod.innerType : void 0);
+      const inner = def._cachedInner ?? (resolve4 ? inst._zod.innerType : void 0);
       merge2(inner ? isRecursive(inner, stack, false) : ASSUMED);
       break;
     }
@@ -23609,8 +23609,8 @@ function foldObjects(members2) {
   }
   const properties = {};
   const required2 = /* @__PURE__ */ new Set();
-  for (const object3 of objects) {
-    for (const key in object3.properties) {
+  for (const object4 of objects) {
+    for (const key in object4.properties) {
       if (Object.prototype.hasOwnProperty.call(properties, key))
         continue;
       const parts = [];
@@ -23624,18 +23624,18 @@ function foldObjects(members2) {
       const merged = parts.length === 1 ? parts[0] : foldObjects(parts) ?? { allOf: parts };
       assignProp(properties, key, merged);
     }
-    for (const key of object3.required ?? [])
+    for (const key of object4.required ?? [])
       required2.add(key);
   }
   const folded = { type: "object", properties };
   if (required2.size)
     folded.required = [...required2];
-  if (objects.every((object3) => object3.additionalProperties === false)) {
+  if (objects.every((object4) => object4.additionalProperties === false)) {
     folded.additionalProperties = false;
   } else {
     const constraints = [];
-    for (const object3 of objects) {
-      const constraint = undeclaredConstraint(object3);
+    for (const object4 of objects) {
+      const constraint = undeclaredConstraint(object4);
       if (constraint && !constraints.some((seen) => JSON.stringify(seen) === JSON.stringify(constraint)))
         constraints.push(constraint);
     }
@@ -29715,7 +29715,7 @@ var Protocol = class {
           return;
         }
         const pollInterval = task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve3) => setTimeout(resolve3, pollInterval));
+        await new Promise((resolve4) => setTimeout(resolve4, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error62) {
@@ -29732,7 +29732,7 @@ var Protocol = class {
    */
   request(request, resultSchema, options) {
     const { relatedRequestId, resumptionToken, onresumptiontoken, task, relatedTask } = options ?? {};
-    return new Promise((resolve3, reject) => {
+    return new Promise((resolve4, reject) => {
       const earlyReject = (error62) => {
         reject(error62);
       };
@@ -29810,7 +29810,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve3(parseResult.data);
+            resolve4(parseResult.data);
           }
         } catch (error62) {
           reject(error62);
@@ -30071,12 +30071,12 @@ var Protocol = class {
       }
     } catch {
     }
-    return new Promise((resolve3, reject) => {
+    return new Promise((resolve4, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve3, interval);
+      const timeoutId = setTimeout(resolve4, interval);
       signal.addEventListener("abort", () => {
         clearTimeout(timeoutId);
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
@@ -31027,7 +31027,7 @@ var StdioClientTransport = class {
     if (this._process) {
       throw new Error("StdioClientTransport already started! If using Client class, note that connect() calls start() automatically.");
     }
-    return new Promise((resolve3, reject) => {
+    return new Promise((resolve4, reject) => {
       this._process = (0, import_cross_spawn.default)(this._serverParams.command, this._serverParams.args ?? [], {
         // merge default env with server env because mcp server needs some env vars
         env: {
@@ -31044,7 +31044,7 @@ var StdioClientTransport = class {
         this.onerror?.(error62);
       });
       this._process.on("spawn", () => {
-        resolve3();
+        resolve4();
       });
       this._process.on("close", (_code) => {
         this._process = void 0;
@@ -31109,22 +31109,22 @@ var StdioClientTransport = class {
     if (this._process) {
       const processToClose = this._process;
       this._process = void 0;
-      const closePromise = new Promise((resolve3) => {
+      const closePromise = new Promise((resolve4) => {
         processToClose.once("close", () => {
-          resolve3();
+          resolve4();
         });
       });
       try {
         processToClose.stdin?.end();
       } catch {
       }
-      await Promise.race([closePromise, new Promise((resolve3) => setTimeout(resolve3, 2e3).unref())]);
+      await Promise.race([closePromise, new Promise((resolve4) => setTimeout(resolve4, 2e3).unref())]);
       if (processToClose.exitCode === null) {
         try {
           processToClose.kill("SIGTERM");
         } catch {
         }
-        await Promise.race([closePromise, new Promise((resolve3) => setTimeout(resolve3, 2e3).unref())]);
+        await Promise.race([closePromise, new Promise((resolve4) => setTimeout(resolve4, 2e3).unref())]);
       }
       if (processToClose.exitCode === null) {
         try {
@@ -31136,15 +31136,15 @@ var StdioClientTransport = class {
     this._readBuffer.clear();
   }
   send(message) {
-    return new Promise((resolve3) => {
+    return new Promise((resolve4) => {
       if (!this._process?.stdin) {
         throw new Error("Not connected");
       }
       const json2 = serializeMessage(message);
       if (this._process.stdin.write(json2)) {
-        resolve3();
+        resolve4();
       } else {
-        this._process.stdin.once("drain", resolve3);
+        this._process.stdin.once("drain", resolve4);
       }
     });
   }
@@ -32649,7 +32649,7 @@ function commandEnv(names) {
 }
 function runCommand(config2, cwd, input2, signal) {
   signal.throwIfAborted();
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     const child = spawn2(config2.command, config2.args, {
       cwd,
       shell: false,
@@ -32694,7 +32694,7 @@ function runCommand(config2, cwd, input2, signal) {
       clean();
       if (failure2) reject(failure2);
       else if (code !== 0) reject(new Error(`Command exited with code ${code}: ${output2.slice(0, 2048)}`));
-      else resolve3(output2);
+      else resolve4(output2);
     });
     child.stdin.on("error", () => {
     });
@@ -32728,6 +32728,12 @@ function redact(text, env = process.env, extra = []) {
   const secrets = [...extra, ...Object.entries(env).filter(([key]) => /KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL/.test(key)).map(([, v]) => v ?? "")];
   for (const secret of secrets.filter((v) => v.length >= 4).sort((a, b) => b.length - a.length)) text = text.split(secret).join("[REDACTED]");
   return text;
+}
+function redactData(value, sanitize = redact) {
+  if (typeof value === "string") return sanitize(value);
+  if (Array.isArray(value)) return value.map((item) => redactData(item, sanitize));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [sanitize(key), redactData(item, sanitize)]));
+  return value;
 }
 function checkedUrl(value, allowLocal = false) {
   const url2 = new URL(value);
@@ -32766,7 +32772,7 @@ async function limitedText(response, maxBytes = 262144) {
 // package.json
 var package_default = {
   name: "@flock-labs/actions",
-  version: "0.1.1",
+  version: "0.2.0",
   description: "Agentic automation with outcome contracts and zero-inference runbooks.",
   type: "module",
   private: true,
@@ -32784,7 +32790,9 @@ var package_default = {
     test: "vitest run",
     check: "npm run typecheck && npm test && npm run build",
     flock: "node dist/cli.js",
-    demo: "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json"
+    demo: "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json",
+    "eval:fixtures": "node evals/build-fixtures.mjs",
+    "eval:baseline": "node evals/baseline.mjs"
   },
   dependencies: {
     "@actions/core": "3.0.1",
@@ -33210,7 +33218,7 @@ async function runTask(task, options) {
         const messages = [{ role: "system", content: system }, { role: "user", content: `${task.prompt}
 
 Untrusted input data:
-${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
+${JSON.stringify(redactData({ inputs: task.inputs, context }, sanitize))}` }];
         const ids = /* @__PURE__ */ new Set();
         let finished = false;
         for (let turnIndex = 0; turnIndex < task.budget.maxTurns; turnIndex++) {
@@ -33245,10 +33253,10 @@ ${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
                 finished = true;
                 break;
               }
-              messages.push({ role: "tool", callId: call.id, content: sanitize(JSON.stringify({ accepted: false, checks: receipt.checks })) });
+              messages.push({ role: "tool", callId: call.id, content: JSON.stringify(redactData({ accepted: false, checks: receipt.checks }, sanitize)) });
             } else {
               const outcome = await execute(call.name, call.arguments);
-              messages.push({ role: "tool", callId: call.id, content: sanitize(JSON.stringify(outcome.value)) });
+              messages.push({ role: "tool", callId: call.id, content: JSON.stringify(redactData(outcome.value, sanitize)) });
             }
           }
           if (finished) break;
@@ -33264,18 +33272,313 @@ ${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
     await registry2.close();
   }
   receipt.durationMs = Math.round(performance.now() - started);
-  const safe = JSON.parse(sanitize(canonical(receipt)));
+  const safe = {
+    ...receipt,
+    task: sanitize(receipt.task),
+    summary: sanitize(receipt.summary),
+    result: redactData(receipt.result, sanitize),
+    steps: receipt.steps.map((step) => ({ ...step, arguments: redactData(step.arguments, sanitize) })),
+    checks: receipt.checks.map((check2) => ({ ...check2, name: sanitize(check2.name), detail: sanitize(check2.detail) })),
+    ...receipt.error ? { error: sanitize(receipt.error) } : {}
+  };
   safe.digest = digest(safe);
   return safe;
 }
+
+// src/evaluation.ts
+import { mkdtemp, readFile as readFile3, rm, stat, mkdir as mkdir3, writeFile as writeFile3 } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname as dirname3, join, posix, resolve as resolve3 } from "node:path";
+import { randomUUID as randomUUID2 } from "node:crypto";
+
+// src/receipt.ts
+import { mkdir as mkdir2, writeFile as writeFile2 } from "node:fs/promises";
+import { dirname as dirname2 } from "node:path";
+async function saveReceipt(path, receipt) {
+  await mkdir2(dirname2(path), { recursive: true });
+  await writeFile2(path, JSON.stringify(receipt, null, 2) + "\n", { encoding: "utf8", mode: 384, flag: "wx" });
+}
+
+// src/evaluation.ts
+var object3 = external_exports.record(external_exports.string(), external_exports.unknown());
+var sha = external_exports.string().regex(/^[a-f0-9]{64}$/);
+var identifier = external_exports.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$/);
+var files = external_exports.record(external_exports.string().min(1), external_exports.string().max(131072)).default({});
+var fileExpectation = external_exports.strictObject({
+  path: external_exports.string().min(1),
+  contains: external_exports.array(external_exports.string().min(1)).max(30).default([]),
+  equals: external_exports.string().optional(),
+  jsonSchema: object3.optional()
+}).refine((v) => v.contains.length > 0 || v.equals !== void 0 || !!v.jsonSchema, "A file expectation requires a content assertion");
+var evaluationSuiteSchema = external_exports.strictObject({
+  $schema: external_exports.string().optional(),
+  version: external_exports.literal(1),
+  name: external_exports.string().min(1).max(200),
+  provenance: external_exports.strictObject({ kind: external_exports.enum(["synthetic", "public", "consented"]), description: external_exports.string().min(1), source: external_exports.string().optional() }),
+  supportFiles: external_exports.array(external_exports.string().min(1)).max(30).default([]),
+  cases: external_exports.array(external_exports.strictObject({
+    id: identifier,
+    category: identifier,
+    inputs: object3.default({}),
+    files,
+    expect: external_exports.strictObject({ resultSchema: object3.optional(), files: external_exports.array(fileExpectation).max(20).default([]) }).refine((v) => !!v.resultSchema || v.files.length > 0, "Each case requires at least one independent expectation")
+  })).min(1).max(500)
+}).refine((suite) => new Set(suite.cases.map((c) => c.id)).size === suite.cases.length, "Case IDs must be unique");
+var evaluationResultsSchema = external_exports.strictObject({
+  version: external_exports.literal(1),
+  suiteDigest: sha,
+  engine: external_exports.string().min(1).max(200),
+  method: external_exports.enum(["agent", "deterministic", "human"]),
+  timingScope: external_exports.string().min(1).max(1e3),
+  cases: external_exports.array(external_exports.strictObject({
+    caseId: identifier,
+    caseDigest: sha,
+    status: external_exports.enum(["completed", "failed"]),
+    result: object3.default({}),
+    files,
+    durationMs: external_exports.number().finite().nonnegative(),
+    modelCalls: external_exports.number().int().nonnegative().nullable(),
+    estimatedCostUsd: external_exports.number().finite().nonnegative().nullable(),
+    accountingComplete: external_exports.boolean(),
+    error: external_exports.string().max(4096).optional()
+  })).max(500)
+});
+var caseDigest = (entry) => digest({ inputs: entry.inputs, files: entry.files });
+function validateSuite(input2) {
+  const suite = evaluationSuiteSchema.parse(input2);
+  for (const entry of suite.cases) {
+    if (entry.expect.resultSchema) validator(entry.expect.resultSchema);
+    for (const check2 of entry.expect.files) if (check2.jsonSchema) validator(check2.jsonSchema);
+  }
+  return suite;
+}
+var quantile = (sorted, q) => sorted.length ? sorted[Math.ceil(sorted.length * q) - 1] : null;
+function scoreEvaluation(suiteInput, resultsInput, source = "imported-self-reported") {
+  const suite = validateSuite(suiteInput);
+  const results = evaluationResultsSchema.parse(resultsInput);
+  if (results.suiteDigest !== digest(suite)) throw new Error("Results refer to a different suite digest");
+  const expected = new Map(suite.cases.map((c) => [c.id, c]));
+  const observations = /* @__PURE__ */ new Map();
+  for (const observation of results.cases) {
+    if (observations.has(observation.caseId)) throw new Error(`Duplicate result: ${observation.caseId}`);
+    const entry = expected.get(observation.caseId);
+    if (!entry || observation.caseDigest !== caseDigest(entry)) throw new Error(`Unknown case or changed inputs: ${observation.caseId}`);
+    if (observation.accountingComplete && observation.estimatedCostUsd === null) throw new Error("Complete accounting requires a numeric cost");
+    observations.set(observation.caseId, observation);
+  }
+  const cases = suite.cases.map((entry) => {
+    const observation = observations.get(entry.id);
+    const base2 = { id: entry.id, category: entry.category, caseDigest: caseDigest(entry) };
+    if (!observation) return { ...base2, status: "not-run", checks: [] };
+    const checks = [];
+    const check2 = (name2, run) => {
+      try {
+        run();
+        checks.push({ name: name2, passed: true, detail: "Passed" });
+      } catch (error62) {
+        checks.push({ name: name2, passed: false, detail: redact(error62.message).slice(0, 1e3) });
+      }
+    };
+    check2("Execution completed", () => {
+      if (observation.status !== "completed") throw new Error("Execution failed; output cannot be counted as an accepted outcome");
+    });
+    if (entry.expect.resultSchema) check2("Labeled result expectation", () => validator(entry.expect.resultSchema)(observation.result));
+    for (const file2 of entry.expect.files) check2(`Artifact: ${file2.path}`, () => {
+      const content = observation.files[file2.path];
+      if (content === void 0) throw new Error("Expected artifact was not provided");
+      if (file2.equals !== void 0 && content !== file2.equals) throw new Error("Artifact does not match expected content");
+      if (file2.contains.some((text) => !content.includes(text))) throw new Error("Artifact is missing required content");
+      if (file2.jsonSchema) validator(file2.jsonSchema)(JSON.parse(content));
+    });
+    return {
+      ...base2,
+      status: checks.every((c) => c.passed) ? "passed" : "failed",
+      checks,
+      resultDigest: digest(observation.result),
+      durationMs: observation.durationMs,
+      ...observation.error ? { error: redact(observation.error) } : {}
+    };
+  });
+  const passed = cases.filter((c) => c.status === "passed").length;
+  const executed = observations.size;
+  const all = [...observations.values()];
+  const cost = all.reduce((sum, c) => sum + (c.estimatedCostUsd ?? 0), 0);
+  const accountingComplete = all.every((c) => c.accountingComplete && c.estimatedCostUsd !== null);
+  const durations = all.map((c) => c.durationMs).sort((a, b) => a - b);
+  const categories = [...new Set(suite.cases.map((c) => c.category))].map((category) => {
+    const subset = cases.filter((c) => c.category === category);
+    return { category, cases: subset.length, executed: subset.filter((c) => c.status !== "not-run").length, passed: subset.filter((c) => c.status === "passed").length };
+  });
+  const report = {
+    version: 1,
+    id: randomUUID2(),
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    suite: suite.name,
+    suiteDigest: digest(suite),
+    corpus: suite.provenance,
+    source,
+    engine: results.engine,
+    method: results.method,
+    timingScope: results.timingScope,
+    runtime: { version: version2, node: process.version, platform: process.platform },
+    totals: {
+      cases: cases.length,
+      executed,
+      passed,
+      failed: executed - passed,
+      notRun: cases.length - executed,
+      passRate: passed / cases.length,
+      passRateAmongExecuted: executed ? passed / executed : null,
+      knownEstimatedCostUsd: cost,
+      accountingComplete,
+      costPerPassedCaseUsd: accountingComplete && passed ? cost / passed : null,
+      knownModelCalls: all.reduce((sum, c) => sum + (c.modelCalls ?? 0), 0),
+      allModelCallsKnown: all.every((c) => c.modelCalls !== null),
+      p50DurationMs: quantile(durations, 0.5),
+      p95DurationMs: quantile(durations, 0.95)
+    },
+    categories,
+    cases
+  };
+  return sealReport(report);
+}
+function sealReport(report) {
+  const clean = {
+    ...report,
+    suite: redact(report.suite),
+    engine: redact(report.engine),
+    timingScope: redact(report.timingScope),
+    corpus: { ...report.corpus, description: redact(report.corpus.description), ...report.corpus.source ? { source: redact(report.corpus.source) } : {} },
+    categories: report.categories.map((c) => ({ ...c, category: redact(c.category) })),
+    cases: report.cases.map((c) => ({
+      ...c,
+      id: redact(c.id),
+      category: redact(c.category),
+      checks: c.checks.map((check2) => ({ ...check2, name: redact(check2.name), detail: redact(check2.detail) })),
+      ...c.error ? { error: redact(c.error) } : {}
+    })),
+    ...report.stoppedReason ? { stoppedReason: redact(report.stoppedReason) } : {}
+  };
+  return { ...clean, digest: digest(clean) };
+}
+async function evaluateTask(taskInput, suiteInput, options) {
+  const task = taskSchema.parse(taskInput);
+  const suite = validateSuite(suiteInput);
+  if (!Number.isFinite(options.maxCostUsd) || options.maxCostUsd <= 0 || options.maxCostUsd > 1e3) throw new Error("An explicit suite budget between 0 and 1000 USD is required");
+  const duration3 = options.maxDurationSeconds ?? 1800;
+  if (!Number.isInteger(duration3) || duration3 < 1 || duration3 > 14400) throw new Error("Suite duration must be 1\u201314400 seconds");
+  if (!options.allowExternalTools && (Object.keys(task.tools).length || task.mcp.length || task.verifiers.some((v) => v.type === "command"))) {
+    throw new Error("Evaluation of commands, HTTP or MCP requires explicit allowExternalTools; repeated cases may repeat external effects");
+  }
+  const source = new Workspace(resolve3(options.cwd));
+  const support = /* @__PURE__ */ Object.create(null);
+  const aliases = /* @__PURE__ */ new Set();
+  const alias = (path) => posix.normalize(path).toLowerCase();
+  for (const path of suite.supportFiles) {
+    if (aliases.has(alias(path))) throw new Error("Support file paths must be unique across case-insensitive filesystems");
+    aliases.add(alias(path));
+    if (task.permissions.writePaths.some((p) => p === "." || alias(p) === alias(path) || p.endsWith("/") && alias(path).startsWith(`${alias(p).replace(/\/$/, "")}/`))) throw new Error("Trusted support files cannot be inside agent-writable paths");
+    support[path] = await source.read(path, [path]);
+  }
+  const preflight = await mkdtemp(join(tmpdir(), "flock-eval-preflight-"));
+  try {
+    const workspace = new Workspace(preflight);
+    for (const path of Object.keys(support)) await workspace.path(path, ["."], true);
+    for (const entry of suite.cases) {
+      const names = new Set(aliases);
+      for (const [path, content] of Object.entries(entry.files)) {
+        if (names.has(alias(path))) throw new Error(`Fixture shadows another fixture or trusted support file: ${path}`);
+        names.add(alias(path));
+        if (Buffer.byteLength(content) > 131072) throw new Error("Fixture exceeds 128 KiB");
+        await workspace.path(path, ["."], true);
+      }
+      for (const file2 of entry.expect.files) await workspace.path(file2.path, ["."]);
+    }
+  } finally {
+    await rm(preflight, { recursive: true, force: true });
+  }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(new Error("Evaluation time budget exhausted")), duration3 * 1e3);
+  const signal = options.signal ? AbortSignal.any([controller.signal, options.signal]) : controller.signal;
+  const observations = [];
+  let spent = 0;
+  let stoppedReason;
+  try {
+    for (const entry of suite.cases) {
+      if (signal.aborted) {
+        stoppedReason = "Evaluation cancelled or time budget exhausted";
+        break;
+      }
+      const remaining = options.maxCostUsd - spent;
+      if (remaining <= 0) {
+        stoppedReason = "Evaluation estimated USD budget exhausted";
+        break;
+      }
+      const directory = await mkdtemp(join(tmpdir(), "flock-eval-case-"));
+      try {
+        const workspace = new Workspace(directory);
+        for (const [path, content] of Object.entries({ ...support, ...entry.files })) await workspace.write(path, content, ["."]);
+        const candidate = taskSchema.parse({ ...task, inputs: entry.inputs, budget: { ...task.budget, maxCostUsd: Math.min(task.budget.maxCostUsd, remaining) } });
+        const receipt = await runTask(candidate, { cwd: directory, signal, ...options.providerFactory ? { provider: options.providerFactory(entry) } : {} });
+        spent += receipt.usage.estimatedCostUsd;
+        if (options.receiptsDirectory) await saveReceipt(join(options.receiptsDirectory, `${entry.id}.json`), receipt);
+        const artifacts = /* @__PURE__ */ Object.create(null);
+        for (const file2 of entry.expect.files) {
+          try {
+            artifacts[file2.path] = await workspace.read(file2.path, [file2.path]);
+          } catch {
+          }
+        }
+        observations.push({
+          caseId: entry.id,
+          caseDigest: caseDigest(entry),
+          status: receipt.status === "verified" || receipt.status === "unverified" ? "completed" : "failed",
+          result: receipt.result,
+          files: artifacts,
+          durationMs: receipt.durationMs,
+          modelCalls: receipt.usage.modelCalls,
+          estimatedCostUsd: receipt.usage.estimatedCostUsd,
+          accountingComplete: receipt.usage.accountingComplete,
+          ...receipt.error ? { error: receipt.error } : {}
+        });
+        if (!receipt.usage.accountingComplete) {
+          stoppedReason = "A submitted model request has unknown billing; no further requests will be made";
+          break;
+        }
+        if (receipt.status === "failed" && receipt.usage.modelCalls === 0) {
+          stoppedReason = receipt.error ?? "Execution failed before any model call";
+          break;
+        }
+      } finally {
+        await rm(directory, { recursive: true, force: true });
+      }
+    }
+  } finally {
+    clearTimeout(timer);
+  }
+  const report = scoreEvaluation(suite, { version: 1, suiteDigest: digest(suite), engine: `${task.model.provider}/${task.model.name}`, method: "agent", timingScope: "Per-case engine wall time including model calls, tools and task verifiers; excludes fixture preparation and evaluation grading.", cases: observations }, options.providerFactory ? "test-fixture" : "provider-execution");
+  const { digest: ignored, ...body } = report;
+  return sealReport({ ...body, taskDigest: digest(task), supportFilesDigest: digest(support), ...stoppedReason ? { stoppedReason: redact(stoppedReason) } : {} });
+}
+async function saveEvaluationReport(path, report) {
+  await mkdir3(dirname3(path), { recursive: true });
+  await writeFile3(path, JSON.stringify(report, null, 2) + "\n", { flag: "wx", mode: 384 });
+}
 export {
+  caseDigest,
   digest,
+  evaluateTask,
+  evaluationResultsSchema,
+  evaluationSuiteSchema,
   loadTask,
   promote,
   runTask,
   runbookSchema,
+  saveEvaluationReport,
+  scoreEvaluation,
   taskDigest,
-  taskSchema
+  taskSchema,
+  validateSuite
 };
 /*! Bundled license information:
 

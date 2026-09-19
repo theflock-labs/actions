@@ -105,6 +105,22 @@ describe('outcome engine', () => {
     expect(JSON.stringify(r)).not.toContain('super-secret-token'); expect(r.result.message).toBe('[REDACTED]');
     const { digest: hash, ...body } = r; expect(digest(body)).toBe(hash);
   });
+  it('redacts secret data without corrupting numeric usage fields', async () => {
+    vi.stubEnv('SHORT_TOKEN', '1234');
+    const p: Provider = { turn: async () => ({ text: '', calls: [finish({ token: '1234' })], usage: { input: 1234, output: 1 } }) };
+    const r = await runTask(task(), { cwd, provider: p });
+    expect(r.status).toBe('unverified'); expect(r.usage.inputTokens).toBe(1234); expect(r.result.token).toBe('[REDACTED]');
+  });
+  it('keeps redacted model input data valid JSON when it contains matching numeric values', async () => {
+    vi.stubEnv('SHORT_TOKEN', '1234');
+    const p: Provider = { turn: async messages => {
+      const text = messages.find(m => m.role === 'user')!.content.split('Untrusted input data:\n')[1]!;
+      expect(JSON.parse(text).inputs).toEqual({ count: 1234, token: '[REDACTED]' });
+      return { text: '', calls: [finish()], usage: { input: 10, output: 1 } };
+    } };
+    const r = await runTask(task({ inputs: { count: 1234, token: '1234' } }), { cwd, provider: p });
+    expect(r.status).toBe('unverified');
+  });
   it('validates a dry run without a model key or executing a command', async () => {
     const r = await runTask(task({ tools: { never: { type: 'command', description: 'Must not execute', command: 'does-not-exist', effect: 'read' } } }), { cwd, dryRun: true });
     expect(r.status).toBe('dry-run'); expect(r.usage.modelCalls).toBe(0);

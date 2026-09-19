@@ -1,0 +1,51 @@
+name: Live task evaluation
+on:
+  workflow_dispatch:
+    inputs:
+      budget-per-suite-usd:
+        description: Estimated inference budget per suite (three suites; external/runner costs excluded).
+        required: true
+        default: '0.25'
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: live-task-evaluation
+  cancel-in-progress: false
+jobs:
+  evaluate:
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        family: [triage, ci-diagnosis, docs]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Require model credentials
+        env:
+          MODEL_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node -e 'if (!process.env.MODEL_KEY) { console.error("Configure OPENAI_API_KEY before running live evaluation."); process.exit(1); }'
+      - name: Evaluate labeled synthetic cases
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          FAMILY: ${{ matrix.family }}
+          EVAL_BUDGET: ${{ inputs.budget-per-suite-usd }}
+        shell: bash
+        run: |
+          extra=()
+          if [[ "$FAMILY" == "docs" ]]; then extra+=(--allow-external-tools); fi
+          node dist/cli.js evaluate --task "evals/$FAMILY/task.json" --suite "evals/$FAMILY/suite.json" --max-cost-usd "$EVAL_BUDGET" --max-duration-seconds 720 --min-pass-rate 0 --save-receipts --output ".flock/evaluation/$FAMILY/report.json" "${extra[@]}"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: evaluation-${{ matrix.family }}
+          path: .flock/evaluation/${{ matrix.family }}/
+          include-hidden-files: true
+          retention-days: 7

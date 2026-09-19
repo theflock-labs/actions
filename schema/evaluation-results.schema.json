@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "suiteDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "engine": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "deterministic",
+        "human"
+      ]
+    },
+    "timingScope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "cases": {
+      "maxItems": 500,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$"
+          },
+          "caseDigest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed"
+            ]
+          },
+          "result": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "files": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 131072
+            }
+          },
+          "durationMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "modelCalls": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "estimatedCostUsd": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accountingComplete": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "caseId",
+          "caseDigest",
+          "status",
+          "result",
+          "files",
+          "durationMs",
+          "modelCalls",
+          "estimatedCostUsd",
+          "accountingComplete"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "suiteDigest",
+    "engine",
+    "method",
+    "timingScope",
+    "cases"
+  ],
+  "additionalProperties": false
+}

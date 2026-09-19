@@ -6,7 +6,7 @@ import type { Provider, Receipt, Runbook, Message, ToolDefinition, JsonObject } 
 import { Workspace } from './workspace.js';
 import { ToolRegistry } from './tools.js';
 import { createProvider, rates } from './providers.js';
-import { digest, validator, redact, canonical, checkedUrl } from './util.js';
+import { digest, validator, redact, redactData, checkedUrl } from './util.js';
 import { taskDigest, runbookSchema } from './runbook.js';
 import { verify } from './verify.js';
 
@@ -101,7 +101,7 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
         tools.push(finish);
         const context = [];
         for (const path of task.context) context.push({ path, content: await workspace.read(path, task.permissions.readPaths) });
-        const messages: Message[] = [{ role: 'system', content: system }, { role: 'user', content: `${task.prompt}\n\nUntrusted input data:\n${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
+        const messages: Message[] = [{ role: 'system', content: system }, { role: 'user', content: `${task.prompt}\n\nUntrusted input data:\n${JSON.stringify(redactData({ inputs: task.inputs, context }, sanitize))}` }];
         const ids = new Set<string>();
         let finished = false;
         for (let turnIndex = 0; turnIndex < task.budget.maxTurns; turnIndex++) {
@@ -132,10 +132,10 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
               if (receipt.checks.every(c => c.passed)) {
                 receipt.status = receipt.checks.length ? 'verified' : 'unverified'; finished = true; break;
               }
-              messages.push({ role: 'tool', callId: call.id, content: sanitize(JSON.stringify({ accepted: false, checks: receipt.checks })) });
+              messages.push({ role: 'tool', callId: call.id, content: JSON.stringify(redactData({ accepted: false, checks: receipt.checks }, sanitize)) });
             } else {
               const outcome = await execute(call.name, call.arguments);
-              messages.push({ role: 'tool', callId: call.id, content: sanitize(JSON.stringify(outcome.value)) });
+              messages.push({ role: 'tool', callId: call.id, content: JSON.stringify(redactData(outcome.value, sanitize)) });
             }
           }
           if (finished) break;
@@ -146,7 +146,13 @@ export async function runTask(task: Task, options: RunOptions): Promise<Receipt>
   } catch (error) { receipt.status = 'failed'; receipt.error = sanitize((error as Error).message); }
   finally { clearTimeout(timer); await registry.close(); }
   receipt.durationMs = Math.round(performance.now() - started);
-  const safe: Receipt = JSON.parse(sanitize(canonical(receipt)));
+  const safe: Receipt = {
+    ...receipt, task: sanitize(receipt.task), summary: sanitize(receipt.summary),
+    result: redactData(receipt.result, sanitize) as JsonObject,
+    steps: receipt.steps.map(step => ({ ...step, arguments: redactData(step.arguments, sanitize) as JsonObject })),
+    checks: receipt.checks.map(check => ({ ...check, name: sanitize(check.name), detail: sanitize(check.detail) })),
+    ...(receipt.error ? { error: sanitize(receipt.error) } : {}),
+  };
   safe.digest = digest(safe);
   return safe;
 }

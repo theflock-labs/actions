@@ -52161,6 +52161,12 @@ function redact(text, env = process.env, extra = []) {
   for (const secret of secrets.filter((v) => v.length >= 4).sort((a, b) => b.length - a.length)) text = text.split(secret).join("[REDACTED]");
   return text;
 }
+function redactData(value, sanitize = redact) {
+  if (typeof value === "string") return sanitize(value);
+  if (Array.isArray(value)) return value.map((item) => redactData(item, sanitize));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [sanitize(key), redactData(item, sanitize)]));
+  return value;
+}
 function checkedUrl(value, allowLocal = false) {
   const url2 = new URL(value);
   if (url2.username || url2.password || url2.hash) throw new Error("URL must not contain credentials or a fragment");
@@ -52198,7 +52204,7 @@ async function limitedText(response, maxBytes = 262144) {
 // package.json
 var package_default = {
   name: "@flock-labs/actions",
-  version: "0.1.1",
+  version: "0.2.0",
   description: "Agentic automation with outcome contracts and zero-inference runbooks.",
   type: "module",
   private: true,
@@ -52216,7 +52222,9 @@ var package_default = {
     test: "vitest run",
     check: "npm run typecheck && npm test && npm run build",
     flock: "node dist/cli.js",
-    demo: "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json"
+    demo: "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json",
+    "eval:fixtures": "node evals/build-fixtures.mjs",
+    "eval:baseline": "node evals/baseline.mjs"
   },
   dependencies: {
     "@actions/core": "3.0.1",
@@ -52619,7 +52627,7 @@ async function runTask(task, options) {
         const messages = [{ role: "system", content: system }, { role: "user", content: `${task.prompt}
 
 Untrusted input data:
-${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
+${JSON.stringify(redactData({ inputs: task.inputs, context }, sanitize))}` }];
         const ids = /* @__PURE__ */ new Set();
         let finished = false;
         for (let turnIndex = 0; turnIndex < task.budget.maxTurns; turnIndex++) {
@@ -52654,10 +52662,10 @@ ${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
                 finished = true;
                 break;
               }
-              messages.push({ role: "tool", callId: call.id, content: sanitize(JSON.stringify({ accepted: false, checks: receipt.checks })) });
+              messages.push({ role: "tool", callId: call.id, content: JSON.stringify(redactData({ accepted: false, checks: receipt.checks }, sanitize)) });
             } else {
               const outcome = await execute(call.name, call.arguments);
-              messages.push({ role: "tool", callId: call.id, content: sanitize(JSON.stringify(outcome.value)) });
+              messages.push({ role: "tool", callId: call.id, content: JSON.stringify(redactData(outcome.value, sanitize)) });
             }
           }
           if (finished) break;
@@ -52673,7 +52681,15 @@ ${sanitize(JSON.stringify({ inputs: task.inputs, context }))}` }];
     await registry2.close();
   }
   receipt.durationMs = Math.round(performance2.now() - started);
-  const safe = JSON.parse(sanitize(canonical(receipt)));
+  const safe = {
+    ...receipt,
+    task: sanitize(receipt.task),
+    summary: sanitize(receipt.summary),
+    result: redactData(receipt.result, sanitize),
+    steps: receipt.steps.map((step) => ({ ...step, arguments: redactData(step.arguments, sanitize) })),
+    checks: receipt.checks.map((check2) => ({ ...check2, name: sanitize(check2.name), detail: sanitize(check2.detail) })),
+    ...receipt.error ? { error: sanitize(receipt.error) } : {}
+  };
   safe.digest = digest(safe);
   return safe;
 }

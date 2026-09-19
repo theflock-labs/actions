@@ -7,7 +7,7 @@
 
 Flock Actions is an open-source GitHub Action and CLI for bounded, verifiable agentic automation. Describe the outcome, declare the capabilities, and let an agent work. Check the result with ordinary code. Promote suitable successful runs into reviewed runbooks that execute without a model.
 
-Built by [Flock Labs](https://github.com/theflock-labs). **Early preview: v0.1.1.** No hosted service, account, subscription, telemetry, or inference markup.
+Built by [Flock Labs](https://github.com/theflock-labs). **Early preview: v0.2.0.** No hosted service, account, subscription, telemetry, or inference markup.
 
 ## Start with a prompt
 
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 steps:
-  - uses: theflock-labs/actions@v0.1.1 # Pin a full commit SHA in production.
+  - uses: theflock-labs/actions@v0.2.0 # Pin a full commit SHA in production.
     id: assess
     with:
       api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -35,7 +35,7 @@ Save this as `.flock-tasks/release-notes.json`:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/theflock-labs/actions/v0.1.1/schema/task.schema.json",
+  "$schema": "https://raw.githubusercontent.com/theflock-labs/actions/v0.2.0/schema/task.schema.json",
   "version": 1,
   "name": "Draft release notes",
   "prompt": "Read changes.txt. Group user-visible changes into a concise release draft in release-notes.md. Cite the change IDs. Do not invent features. Return the output path.",
@@ -60,7 +60,7 @@ Save this as `.flock-tasks/release-notes.json`:
 - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
   with:
     persist-credentials: false
-- uses: theflock-labs/actions@v0.1.1
+- uses: theflock-labs/actions@v0.2.0
   id: draft
   with:
     task-file: .flock-tasks/release-notes.json
@@ -118,6 +118,7 @@ Use ordinary Actions for dependency installation, building, testing, artifact up
 - Portable JSON receipts, contract fingerprints, secret-value redaction, GitHub outputs and job summaries.
 - Reviewed runbooks with prerequisite digests and no inference dependency.
 - Generated [JSON Schema](schema/task.schema.json), local CLI, cross-platform tests, and bundled Action distribution.
+- Evaluation runner and offline scorer with 36 labeled synthetic cases and deterministic baselines, so AI must demonstrate value beyond ordinary code.
 
 Protocol and adapter tests are not a certification of every vendor or model. This release's live-inference validation status is recorded in [validation](docs/validation.md).
 
@@ -132,6 +133,7 @@ Commands and MCP servers are trusted code with their runner's authority. Capabil
 - [Task format, outputs, CLI and limits](docs/reference.md)
 - [Integration guide and coverage](docs/integrations.md)
 - [Architecture and runbook lifecycle](docs/architecture.md)
+- [Evaluation suites, baselines and fair comparisons](docs/evaluation.md)
 - [Market research and competitive assessment](docs/market.md)
 - [Differentiation, defensibility and roadmap](docs/strategy.md)
 - [Pricing and unit economics](docs/pricing.md)

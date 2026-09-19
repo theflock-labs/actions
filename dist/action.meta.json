@@ -7918,7 +7918,7 @@
       "format": "esm"
     },
     "src/util.ts": {
-      "bytes": 2915,
+      "bytes": 3488,
       "imports": [
         {
           "path": "node:crypto",
@@ -7934,7 +7934,7 @@
       "format": "esm"
     },
     "package.json": {
-      "bytes": 947,
+      "bytes": 1049,
       "imports": [],
       "format": "esm",
       "with": {
@@ -8050,7 +8050,7 @@
       "format": "esm"
     },
     "src/engine.ts": {
-      "bytes": 11399,
+      "bytes": 11846,
       "imports": [
         {
           "path": "node:crypto",
@@ -9753,7 +9753,7 @@
           "bytesInOutput": 5105
         },
         "src/engine.ts": {
-          "bytesInOutput": 10795
+          "bytesInOutput": 11226
         },
         "src/workspace.ts": {
           "bytesInOutput": 2756
@@ -9837,10 +9837,10 @@
           "bytesInOutput": 2099
         },
         "src/util.ts": {
-          "bytesInOutput": 2598
+          "bytesInOutput": 2963
         },
         "package.json": {
-          "bytesInOutput": 920
+          "bytesInOutput": 1022
         },
         "src/version.ts": {
           "bytesInOutput": 40
@@ -9858,7 +9858,7 @@
           "bytesInOutput": 337
         }
       },
-      "bytes": 2091046
+      "bytes": 2091944
     }
   }
 }

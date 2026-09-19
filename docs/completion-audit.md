@@ -10,6 +10,7 @@ Status: substantial public preview delivered; the full product/business objectiv
 - **Public consumer execution:** [smoke test](https://github.com/theflock-labs/actions/actions/runs/35474588454) resolved and ran `theflock-labs/actions@v0.1.1`, independently verified the artifact, and asserted zero model calls.
 - **Working execution paths:** Action/CLI/library, scoped files, command/HTTP tools and both MCP transports. [Release CI](https://github.com/theflock-labs/actions/actions/runs/35474451812) passes 65 tests on Linux, macOS and Windows and runs the packaged Action on GitHub.
 - **Avoid unnecessary AI:** deterministic runbooks bypass provider initialization and independently verify outputs with zero model calls. Examples keep ordinary filtering, building, testing and deployment in existing Actions/scripts.
+- **Evaluation foundation:** the `evaluate` and offline `score` commands use shared labeled suites, input fingerprints, explicit provenance, budget controls and independent checks. There are 36 authored synthetic cases across triage, CI diagnosis and release-note constraints, plus reproducible no-model baselines. These are not live model results or production performance evidence.
 - **Research:** [market assessment](market.md) evaluates direct competitors, adjacent agents/review tools, workflow platforms, deterministic substitutes and security/gateway complements using current primary sources. No fictitious TAM, market share or benchmark ranking is presented.
 - **Monetization plan:** [pricing](pricing.md) describes a free local runner, proposed organization plans, a 24-month monetization sequence, and explicit unit-economic assumptions and sensitivities.
 - **Integration breadth:** [integration guide](integrations.md) covers transport/auth routes across source control, planning, chat, observability, cloud, build/release, data, security and workflow systems. It separates implemented adapters, examples, gateway routes and unsupported authentication.
@@ -24,7 +25,7 @@ Status: substantial public preview delivered; the full product/business objectiv
 ## Next evidence to obtain
 
 1. Configure a provider secret and run live acceptance; inspect the actual receipt, artifact, usage and verifier results.
-2. Build a labeled evaluation corpus for the three initial task families and compare against deterministic baselines and a leading incumbent on identical inputs.
+2. Run live models and a leading incumbent on the included cases, then expand beyond synthetic fixtures to representative, permissioned, independently labeled data. Preserve equal inputs and explicit execution/provenance differences.
 3. Enroll consenting design partners and measure accepted outcomes, investigation time, repeat eligibility and retention. No customer messages or outreach have been sent as part of this build.
 4. Validate proposed prices and support costs before offering a paid plan. Keep the open runner and critical local controls free.
 

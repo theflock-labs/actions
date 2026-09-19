@@ -4817,7 +4817,7 @@
       "format": "esm"
     },
     "src/util.ts": {
-      "bytes": 2915,
+      "bytes": 3488,
       "imports": [
         {
           "path": "node:crypto",
@@ -4833,7 +4833,7 @@
       "format": "esm"
     },
     "package.json": {
-      "bytes": 947,
+      "bytes": 1049,
       "imports": [],
       "format": "esm",
       "with": {
@@ -4949,7 +4949,7 @@
       "format": "esm"
     },
     "src/engine.ts": {
-      "bytes": 11399,
+      "bytes": 11846,
       "imports": [
         {
           "path": "node:crypto",
@@ -4999,8 +4999,85 @@
       ],
       "format": "esm"
     },
+    "src/receipt.ts": {
+      "bytes": 469,
+      "imports": [
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/evaluation.ts": {
+      "bytes": 16448,
+      "imports": [
+        {
+          "path": "node_modules/zod/index.js",
+          "kind": "import-statement",
+          "original": "zod"
+        },
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/config.ts",
+          "kind": "import-statement",
+          "original": "./config.js"
+        },
+        {
+          "path": "src/engine.ts",
+          "kind": "import-statement",
+          "original": "./engine.js"
+        },
+        {
+          "path": "src/workspace.ts",
+          "kind": "import-statement",
+          "original": "./workspace.js"
+        },
+        {
+          "path": "src/util.ts",
+          "kind": "import-statement",
+          "original": "./util.js"
+        },
+        {
+          "path": "src/receipt.ts",
+          "kind": "import-statement",
+          "original": "./receipt.js"
+        },
+        {
+          "path": "src/version.ts",
+          "kind": "import-statement",
+          "original": "./version.js"
+        }
+      ],
+      "format": "esm"
+    },
     "src/index.ts": {
-      "bytes": 375,
+      "bytes": 663,
       "imports": [
         {
           "path": "src/config.ts",
@@ -5021,6 +5098,11 @@
           "path": "src/util.ts",
           "kind": "import-statement",
           "original": "./util.js"
+        },
+        {
+          "path": "src/evaluation.ts",
+          "kind": "import-statement",
+          "original": "./evaluation.js"
         }
       ],
       "format": "esm"
@@ -5128,16 +5210,53 @@
           "path": "node:crypto",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
         }
       ],
       "exports": [
+        "caseDigest",
         "digest",
+        "evaluateTask",
+        "evaluationResultsSchema",
+        "evaluationSuiteSchema",
         "loadTask",
         "promote",
         "runTask",
         "runbookSchema",
+        "saveEvaluationReport",
+        "scoreEvaluation",
         "taskDigest",
-        "taskSchema"
+        "taskSchema",
+        "validateSuite"
       ],
       "entryPoint": "src/index.ts",
       "inputs": {
@@ -5355,10 +5474,10 @@
           "bytesInOutput": 1648
         },
         "node_modules/isexe/windows.js": {
-          "bytesInOutput": 1120
+          "bytesInOutput": 1125
         },
         "node_modules/isexe/mode.js": {
-          "bytesInOutput": 1079
+          "bytesInOutput": 1088
         },
         "node_modules/isexe/index.js": {
           "bytesInOutput": 1371
@@ -5688,7 +5807,7 @@
           "bytesInOutput": 0
         },
         "src/engine.ts": {
-          "bytesInOutput": 10761
+          "bytesInOutput": 11192
         },
         "src/workspace.ts": {
           "bytesInOutput": 2711
@@ -5772,10 +5891,10 @@
           "bytesInOutput": 2099
         },
         "src/util.ts": {
-          "bytesInOutput": 2598
+          "bytesInOutput": 2963
         },
         "package.json": {
-          "bytesInOutput": 920
+          "bytesInOutput": 1022
         },
         "src/version.ts": {
           "bytesInOutput": 40
@@ -5788,9 +5907,15 @@
         },
         "src/verify.ts": {
           "bytesInOutput": 821
+        },
+        "src/evaluation.ts": {
+          "bytesInOutput": 14732
+        },
+        "src/receipt.ts": {
+          "bytesInOutput": 337
         }
       },
-      "bytes": 1280356
+      "bytes": 1296542
     }
   }
 }

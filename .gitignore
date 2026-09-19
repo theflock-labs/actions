@@ -8,3 +8,4 @@ coverage/
 .DS_Store
 release-manifest.json
 change-summary.md
+evals/private/

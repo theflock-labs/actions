@@ -22,10 +22,12 @@ for (const entry of ['action', 'cli', 'index']) {
     }
   }
 }
-const { taskSchema } = await import('../dist/index.js');
+const { taskSchema, evaluationSuiteSchema, evaluationResultsSchema } = await import('../dist/index.js');
 const { z } = await import('zod');
 await mkdir('schema', { recursive: true });
 await writeFile('schema/task.schema.json', JSON.stringify(z.toJSONSchema(taskSchema), null, 2) + '\n');
+await writeFile('schema/evaluation-suite.schema.json', JSON.stringify(z.toJSONSchema(evaluationSuiteSchema), null, 2) + '\n');
+await writeFile('schema/evaluation-results.schema.json', JSON.stringify(z.toJSONSchema(evaluationResultsSchema), null, 2) + '\n');
 const notices = [];
 for (const directory of [...packages].sort()) {
   const pkg = JSON.parse(await readFile(join(directory, 'package.json'), 'utf8'));

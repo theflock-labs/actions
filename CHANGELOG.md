@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — 2026-09-20
+
+- Add bounded `evaluate` execution and offline `score` commands with versioned suite/result schemas.
+- Preserve provenance, missing cases, failed-case costs and incomplete billing in evaluation reports.
+- Add 36 explicitly synthetic cases and reproducible deterministic baselines for issue triage, CI diagnosis and release-note constraints.
+- Add a manual live-evaluation workflow and a consent-based design-partner validation protocol.
+- Fix structural JSON redaction so numeric secret coincidences cannot corrupt model feedback or receipt metering.
+- Expand the deterministic test suite to 87 tests.
+
+Live model comparisons, representative production outcomes and commercial defensibility remain unproven. The included synthetic baselines measure only their declared assertions.
+
 ## 0.1.1 — 2026-09-20
 
 - Block additional common credential paths in built-in file tools.

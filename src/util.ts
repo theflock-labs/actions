@@ -24,6 +24,14 @@ export function redact(text: string, env: NodeJS.ProcessEnv = process.env, extra
   for (const secret of secrets.filter(v => v.length >= 4).sort((a,b) => b.length-a.length)) text = text.split(secret).join('[REDACTED]');
   return text;
 }
+// Redact untrusted JSON data structurally. Never rewrite serialized JSON: a
+// coincidental match in a number can make the document invalid or corrupt usage.
+export function redactData(value: unknown, sanitize: (text: string) => string = redact): unknown {
+  if (typeof value === 'string') return sanitize(value);
+  if (Array.isArray(value)) return value.map(item => redactData(item, sanitize));
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [sanitize(key), redactData(item, sanitize)]));
+  return value;
+}
 export function checkedUrl(value: string, allowLocal = false): URL {
   const url = new URL(value);
   if (url.username || url.password || url.hash) throw new Error('URL must not contain credentials or a fragment');

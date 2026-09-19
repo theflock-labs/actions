@@ -1,6 +1,6 @@
 {
   "name": "@flock-labs/actions",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Agentic automation with outcome contracts and zero-inference runbooks.",
   "type": "module",
   "private": true,
@@ -18,7 +18,9 @@
     "test": "vitest run",
     "check": "npm run typecheck && npm test && npm run build",
     "flock": "node dist/cli.js",
-    "demo": "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json"
+    "demo": "node dist/cli.js run --task examples/runbook/task.json --runbook examples/runbook/runbook.json",
+    "eval:fixtures": "node evals/build-fixtures.mjs",
+    "eval:baseline": "node evals/baseline.mjs"
   },
   "dependencies": {
     "@actions/core": "3.0.1",

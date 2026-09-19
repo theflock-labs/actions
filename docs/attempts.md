@@ -27,3 +27,11 @@ Final boundary review identified additional common credential files (`.npmrc`, `
 ## GitHub workflow registration is eventually consistent
 
 An immediate dispatch of the newly pushed `release-smoke.yml` returned HTTP 404 even though the push succeeded. No run had started. Listing workflows later confirmed registration; dispatching its observed workflow ID then succeeded. Check registration and run state before retrying so transient API lag does not create duplicate runs.
+
+## Secret redaction must preserve structured metadata
+
+A regression using a numeric secret (`1234`) reproduced invalid JSON when the same digits appeared in token counts or durations: redaction was performed on serialized JSON. Redaction now walks user-controlled JSON data and text fields while preserving numeric metering, status enums and fingerprints. This is a correctness fix to `src/engine.ts`, `src/util.ts` and the evaluation report writer; known secrets in user strings remain masked.
+
+## Capture provider inputs at call time in tests
+
+An initial ground-truth isolation assertion inspected the provider mock's retained message-array reference after the engine appended the model response, producing a false positive. The test now snapshots messages when the provider is called. Expected labels are not sent in the model prompt.

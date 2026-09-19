@@ -1,13 +1,14 @@
 # Validation record
 
-Release target: 0.1.1. Update this file with evidence, not intent.
+Release target: 0.2.0. Update this file with evidence, not intent.
 
 ## Verified locally
 
 - TypeScript strict checking and bundled Action/CLI generation pass.
-- 65 deterministic tests pass, including engine outcomes and repair, budget denial, incomplete billing, filesystem traversal, credential paths, Windows aliases and links, replay guards/promotion, provider protocol parsing, command environment/timeout/output limits, HTTP redirect rejection, and real stdio and Streamable HTTP MCP fixtures.
+- 87 deterministic tests pass, including engine outcomes and repair, budget denial, incomplete billing, filesystem traversal, credential paths, Windows aliases and links, replay guards/promotion, provider protocol parsing, command environment/timeout/output limits, HTTP redirect rejection, real stdio and Streamable HTTP MCP fixtures, evaluation isolation/provenance/scoring, and structural JSON redaction.
 - The same suite passes on Node 24.21.0, the supported release runtime.
 - The bundled CLI executes the reviewed manifest runbook and independently verifies its result with zero model calls and no API key.
+- The bundled offline scorer reproduces deterministic baselines of 11/16 issue-triage cases, 11/12 CI-diagnosis cases and 8/8 release-note constraint cases. All 36 cases are authored synthetic fixtures. The release-note checks measure mechanical constraints, not editorial quality. These are not model performance results.
 - npm dependency audit reports no known vulnerabilities at initial installation. This is a point-in-time advisory check, not a security audit.
 
 ## Verified on GitHub

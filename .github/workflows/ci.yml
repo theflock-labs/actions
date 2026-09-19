@@ -41,8 +41,19 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: npm run eval:fixtures
       - run: git diff --exit-code -- dist schema THIRD_PARTY_NOTICES.md
+      - run: git diff --exit-code -- evals
       - run: npm audit --omit=dev --audit-level=high
+      - name: Exercise offline evaluation through the bundled CLI
+        run: npm run eval:baseline
+      - name: Preserve synthetic baseline evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: synthetic-deterministic-baselines
+          path: .flock/evaluations/baseline-*/
+          include-hidden-files: true
+          retention-days: 7
       - name: Run the packaged GitHub Action without an API key
         id: demo
         uses: ./
