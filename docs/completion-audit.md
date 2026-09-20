@@ -24,9 +24,11 @@ Status: substantial public preview delivered; the full product/business objectiv
 
 ## Next evidence to obtain
 
-1. Configure a provider secret and run live acceptance; inspect the actual receipt, artifact, usage and verifier results.
-2. Run live models and a leading incumbent on the included cases, then expand beyond synthetic fixtures to representative, permissioned, independently labeled data. Preserve equal inputs and explicit execution/provenance differences.
-3. Enroll consenting design partners and measure accepted outcomes, investigation time, repeat eligibility and retention. No customer messages or outreach have been sent as part of this build.
+The owner deferred live inference validation and the real-world pilot on 2026-09-20. The following are future evidence needs, not actions to start or repeatedly request now.
+
+1. When live validation resumes, configure a provider secret and run live acceptance; inspect the actual receipt, artifact, usage and verifier results.
+2. After resumption, run live models and a leading incumbent on the included cases, then expand beyond synthetic fixtures to representative, permissioned, independently labeled data. Preserve equal inputs and explicit execution/provenance differences.
+3. When the pilot resumes, enroll consenting design partners and measure accepted outcomes, investigation time, repeat eligibility and retention. No customer messages or outreach have been sent as part of this build.
 4. Validate proposed prices and support costs before offering a paid plan. Keep the open runner and critical local controls free.
 
 Flock graph tools were unavailable in this session. Repository [decisions](decisions.md) and [failed-attempt notes](attempts.md) preserve the implementation context for later graph synchronization; no claim is made that the graph was queried or updated.

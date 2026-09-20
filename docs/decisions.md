@@ -43,3 +43,9 @@ Use one versioned suite and scoring format for Flock runs and imported competito
 Scope: `src/util.ts`, `src/engine.ts`, `src/evaluation.ts`, `test/engine.test.ts`, `test/evaluation.test.ts`.
 
 Walk JSON string values and user-controlled keys, and explicitly sanitize receipt/report text fields. Preserve numeric usage, status enums and fingerprints. Reject replacing secret substrings in serialized JSON: a numeric secret can coincide with token counts or durations, producing invalid JSON or misleading metering. Redaction is best effort, not a substitute for preventing secrets from entering task data.
+
+## Keep live validation and the real-world pilot pending
+
+Scope: `docs/validation.md`, `docs/completion-audit.md`, `docs/pilot.md`, `.github/workflows/live-validation.yml`, `.github/workflows/live-evaluation.yml`.
+
+On 2026-09-20 the owner explicitly chose to keep live inference validation pending and wait on the real-world pilot. Preserve the prepared manual workflows and experiment plan. Do not initiate those activities or repeat requests for credentials or pilot selection until the owner asks to resume. Deterministic evidence remains distinct from live-provider and customer evidence.

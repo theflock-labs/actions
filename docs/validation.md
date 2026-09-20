@@ -2,6 +2,8 @@
 
 Release target: 0.2.0. Update this file with evidence, not intent.
 
+Owner direction (2026-09-20): keep live inference validation pending and wait on the real-world pilot. Resume those activities only when the owner asks; no credentials or pilot selection are needed now.
+
 ## Verified locally
 
 - TypeScript strict checking and bundled Action/CLI generation pass.
